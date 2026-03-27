@@ -1,55 +1,199 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-    <title>ADM | B2 STREET</title>
+    <title>ADM | B2 STREET PREMIUM</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background: #000; color: #fff; font-family: sans-serif; padding: 20px; }
-        .header-adm { text-align: center; margin-bottom: 40px; }
-        .logo-adm { width: 120px; }
-        .card { background: #0a0a0a; border: 1px solid #1a1a1a; padding: 20px; border-radius: 15px; margin-bottom: 25px; }
-        h2 { font-size: 0.9rem; letter-spacing: 2px; color: #555; margin-bottom: 20px; }
-        input, select { width: 100%; padding: 12px; margin-bottom: 15px; background: #111; border: 1px solid #222; color: #fff; border-radius: 8px; }
-        button { width: 100%; padding: 15px; background: #fff; color: #000; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; }
-        .item-list { display: flex; align-items: center; gap: 10px; background: #111; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-size: 0.8rem; }
-        .btn-del { background: #ff4444; color: #fff; padding: 5px 10px; width: auto; font-size: 0.7rem; margin-left: 5px; border-radius: 4px; }
-        .btn-edit { background: #25D366; color: #000; padding: 5px 10px; width: auto; font-size: 0.7rem; margin-left: auto; border-radius: 4px; }
+        :root {
+            --primary: #25D366;
+            --bg: #050505;
+            --card-bg: #0f0f0f;
+            --border: #1a1a1a;
+            --text-muted: #888;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { 
+            background: var(--bg); 
+            color: #fff; 
+            font-family: 'Inter', -apple-system, sans-serif; 
+            line-height: 1.6;
+        }
+
+        /* Topo com Vídeo */
+        .hero-header {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .hero-header video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            filter: brightness(0.4);
+            object-fit: cover;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .logo-adm { width: 140px; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)); }
+
+        .container { max-width: 600px; margin: -30px auto 100px; padding: 0 20px; position: relative; z-index: 3; }
+
+        .card { 
+            background: var(--card-bg); 
+            border: 1px solid var(--border); 
+            padding: 25px; 
+            border-radius: 20px; 
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        h2 { 
+            font-size: 0.75rem; 
+            text-transform: uppercase;
+            letter-spacing: 3px; 
+            color: var(--text-muted); 
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2 i { color: var(--primary); }
+
+        input, select { 
+            width: 100%; 
+            padding: 14px; 
+            margin-bottom: 15px; 
+            background: #151515; 
+            border: 1px solid #252525; 
+            color: #fff; 
+            border-radius: 12px;
+            transition: 0.3s;
+        }
+
+        input:focus { border-color: var(--primary); outline: none; background: #1a1a1a; }
+
+        button { 
+            width: 100%; 
+            padding: 16px; 
+            background: #fff; 
+            color: #000; 
+            border: none; 
+            border-radius: 12px; 
+            font-weight: 800; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer; 
+            transition: 0.3s;
+        }
+
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,255,255,0.1); }
+
+        .btn-main { background: var(--primary); color: #000; }
+
+        /* Lista Estilizada */
+        .item-list { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            background: #151515; 
+            padding: 12px; 
+            border-radius: 14px; 
+            margin-bottom: 12px; 
+            border: 1px solid #222;
+        }
+
+        .item-img { width: 50px; height: 50px; object-fit: cover; border-radius: 10px; border: 1px solid #333; }
+
+        .item-info b { font-size: 0.9rem; display: block; }
+        .item-info small { color: var(--text-muted); font-size: 0.75rem; }
+
+        .actions { display: flex; gap: 8px; margin-left: auto; }
+
+        .btn-del, .btn-edit { 
+            padding: 8px 12px; 
+            width: auto; 
+            font-size: 0.7rem; 
+            border-radius: 8px; 
+        }
+
+        .btn-del { background: #331111; color: #ff4444; border: 1px solid #442222; }
+        .btn-edit { background: #113311; color: var(--primary); border: 1px solid #114411; }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="header-adm">
-        <img src="logo.jpg" class="logo-adm">
-        <p style="font-size: 0.7rem; color: #25D366; margin-top: 10px;">PAINEL DE CONTROLE PREMIUM</p>
+    <header class="hero-header">
+        <video autoplay muted loop playsinline>
+            <source src="video.mov" type="video/mp4">
+        </video>
+        <div class="hero-content">
+            <img src="logo.jpg" class="logo-adm">
+            <p style="font-size: 0.6rem; color: var(--primary); letter-spacing: 4px; margin-top: 10px; font-weight: bold;">PAINEL ADMINISTRATIVO</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2><i class="fas fa-images"></i> Banners Destaque</h2>
+            <input type="text" id="b-url" placeholder="URL da imagem do banner">
+            <button onclick="addBanner()">Adicionar à Vitrine</button>
+            <div id="lista-banners" style="margin-top: 20px;"></div>
+        </div>
+
+        <div class="card">
+            <h2><i class="fas fa-plus-circle"></i> Inventário de Produtos</h2>
+            <input type="text" id="p-nome" placeholder="Nome do modelo">
+            <input type="text" id="p-preco" placeholder="Valor (ex: 299,90)">
+            <select id="p-cat">
+                <option value="tenis">Tênis</option>
+                <option value="camisas">Camisas</option>
+                <option value="conjuntos">Conjuntos</option>
+                <option value="shorts">Shorts</option>
+                <option value="joias">Joias</option>
+            </select>
+            <input type="text" id="p-img" placeholder="Link da imagem principal">
+            <button onclick="addProduto()" class="btn-main">Publicar Produto</button>
+        </div>
+
+        <div class="card">
+            <h2><i class="fas fa-boxes"></i> Catálogo Ativo</h2>
+            <div id="lista-produtos"></div>
+        </div>
     </div>
 
-    <div class="card">
-        <h2><i class="fas fa-image"></i> GERENCIAR BANNERS</h2>
-        <input type="text" id="b-url" placeholder="Link da imagem do banner">
-        <button onclick="addBanner()">ADICIONAR BANNER</button>
-        <div id="lista-banners" style="margin-top: 20px;"></div>
-    </div>
-
-    <div class="card">
-        <h2><i class="fas fa-box"></i> NOVO PRODUTO</h2>
-        <input type="text" id="p-nome" placeholder="Nome do Produto">
-        <input type="text" id="p-preco" placeholder="Preco (Ex: 199,90)">
-        <select id="p-cat">
-            <option value="tenis">Tenis</option>
-            <option value="camisas">Camisas</option>
-            <option value="conjuntos">Conjuntos</option>
-            <option value="shorts">Shorts</option>
-            <option value="joias">Joias</option>
-        </select>
-        <input type="text" id="p-img" placeholder="Link da Imagem do Produto">
-        <button onclick="addProduto()" style="background: #25D366; color: #000;">CADASTRAR PRODUTO</button>
-    </div>
-
-    <div class="card">
-        <h2><i class="fas fa-list"></i> PRODUTOS CADASTRADOS</h2>
-        <div id="lista-produtos"></div>
-    </div>
+    <footer>
+        <p>&copy; 2026 B2 STREET | DESENVOLVIDO PARA ALTA PERFORMANCE</p>
+    </footer>
 
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
@@ -67,12 +211,11 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// --- FUNÇÕES DE BANNER ---
+// Banner Logic
 function addBanner() {
     const url = document.getElementById('b-url').value;
     if(url) db.ref('banners').push({ url }).then(() => {
         document.getElementById('b-url').value = "";
-        alert("Banner Adicionado!");
     });
 }
 
@@ -82,14 +225,16 @@ db.ref('banners').on('value', snap => {
     snap.forEach(c => {
         div.innerHTML += `
         <div class="item-list">
-            <img src="${c.val().url}" style="width:40px; height:40px; object-fit:cover; border-radius:4px">
-            <span style="flex:1">Banner</span>
-            <button class="btn-del" onclick="db.ref('banners/${c.key}').remove()">Excluir</button>
+            <img src="${c.val().url}" class="item-img">
+            <span style="font-size:0.8rem">Banner Ativo</span>
+            <div class="actions">
+                <button class="btn-del" onclick="db.ref('banners/${c.key}').remove()"><i class="fas fa-trash"></i></button>
+            </div>
         </div>`;
     });
 });
 
-// --- FUNÇÕES DE PRODUTO ---
+// Product Logic
 function addProduto() {
     const nome = document.getElementById('p-nome').value;
     const preco = document.getElementById('p-preco').value;
@@ -97,7 +242,6 @@ function addProduto() {
     const imagem = document.getElementById('p-img').value;
     if(nome && preco) {
         db.ref('produtos').push({ nome, preco, categoria, imagem }).then(() => {
-            alert("Produto Cadastrado!");
             document.getElementById('p-nome').value = "";
             document.getElementById('p-preco').value = "";
             document.getElementById('p-img').value = "";
@@ -105,16 +249,11 @@ function addProduto() {
     }
 }
 
-// Editar Nome e Preço
 function editarProduto(id, nomeAtual, precoAtual) {
-    const novoNome = prompt("Novo nome do produto:", nomeAtual);
-    const novoPreco = prompt("Novo preço do produto (Ex: 199,90):", precoAtual);
-    
+    const novoNome = prompt("Novo nome:", nomeAtual);
+    const novoPreco = prompt("Novo preço:", precoAtual);
     if (novoNome && novoPreco) {
-        db.ref('produtos/' + id).update({
-            nome: novoNome,
-            preco: novoPreco
-        }).then(() => alert("Produto atualizado!"));
+        db.ref('produtos/' + id).update({ nome: novoNome, preco: novoPreco });
     }
 }
 
@@ -125,12 +264,15 @@ db.ref('produtos').on('value', snap => {
         const p = c.val();
         div.innerHTML += `
         <div class="item-list">
-            <img src="${p.imagem}" style="width:40px; height:40px; object-fit:cover; border-radius:4px">
-            <div style="flex:1">
-                <b>${p.nome}</b><br><small>R$ ${p.preco} - ${p.categoria}</small>
+            <img src="${p.imagem}" class="item-img">
+            <div class="item-info">
+                <b>${p.nome}</b>
+                <small>R$ ${p.preco} • ${p.categoria}</small>
             </div>
-            <button class="btn-edit" onclick="editarProduto('${c.key}', '${p.nome}', '${p.preco}')">EDITAR</button>
-            <button class="btn-del" onclick="confirm('Excluir produto?') && db.ref('produtos/${c.key}').remove()">Excluir</button>
+            <div class="actions">
+                <button class="btn-edit" onclick="editarProduto('${c.key}', '${p.nome}', '${p.preco}')">EDITAR</button>
+                <button class="btn-del" onclick="confirm('Excluir?') && db.ref('produtos/${c.key}').remove()"><i class="fas fa-times"></i></button>
+            </div>
         </div>`;
     });
 });
