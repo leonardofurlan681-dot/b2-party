@@ -1,138 +1,60 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B2 STREET | Admin Panel</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>ADM | B2 STREET</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-
     <style>
-        :root { --accent: #25D366; --bg: #050505; --card: #111; --border: #222; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background: var(--bg); color: #fff; }
-
-        /* Tela de Login */
-        #login-screen { 
-            position: fixed; inset: 0; background: #000; z-index: 9999; 
-            display: flex; align-items: center; justify-content: center; padding: 20px;
-        }
-        .login-card { 
-            background: var(--card); padding: 40px; border-radius: 20px; 
-            border: 1px solid var(--border); width: 100%; max-width: 400px; text-align: center;
-        }
-
-        /* Header com Vídeo */
-        .admin-header { 
-            width: 100%; height: 300px; position: relative; overflow: hidden; 
-            display: flex; align-items: center; justify-content: center;
-        }
-        .admin-header video { width: 100%; height: 100%; object-fit: cover; opacity: 0.5; }
-        .header-content { position: absolute; z-index: 10; text-align: center; }
-        .header-content h1 { font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
-
-        /* Layout */
-        .container { padding: 40px 5%; max-width: 1200px; margin: auto; }
-        .grid-forms { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: -60px; }
-        
-        .card { 
-            background: var(--card); border: 1px solid var(--border); 
-            padding: 25px; border-radius: 15px; position: relative; z-index: 20;
-        }
-        .card h2 { font-size: 1rem; margin-bottom: 20px; text-transform: uppercase; color: var(--accent); }
-
-        /* Inputs Premium */
-        input, select { 
-            width: 100%; padding: 12px; margin-bottom: 15px; background: #000; 
-            border: 1px solid var(--border); color: #fff; border-radius: 8px; outline: none;
-        }
-        input:focus { border-color: var(--accent); }
-
-        .btn { 
-            width: 100%; padding: 14px; border: none; border-radius: 8px; 
-            font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.3s;
-        }
-        .btn-add { background: var(--accent); color: #000; }
-        .btn-logout { background: #ff4444; color: #fff; margin-top: 20px; font-size: 0.7rem; padding: 8px; }
-
-        /* Lista de Produtos */
-        .product-list { margin-top: 40px; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
-        .item-adm { 
-            background: #111; border: 1px solid #222; padding: 10px; border-radius: 10px; 
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .item-info img { width: 40px; height: 40px; object-fit: cover; border-radius: 5px; margin-right: 10px; }
-        .btn-del { color: #ff4444; cursor: pointer; padding: 10px; }
-
-        @media (max-width: 768px) {
-            .admin-header { height: 200px; }
-            .grid-forms { margin-top: 20px; }
-        }
+        body { background: #000; color: #fff; font-family: sans-serif; padding: 20px; }
+        .header-adm { text-align: center; margin-bottom: 40px; }
+        .logo-adm { width: 120px; }
+        .card { background: #0a0a0a; border: 1px solid #1a1a1a; padding: 20px; border-radius: 15px; margin-bottom: 25px; }
+        h2 { font-size: 0.9rem; letter-spacing: 2px; color: #555; margin-bottom: 20px; }
+        input, select { width: 100%; padding: 12px; margin-bottom: 15px; background: #111; border: 1px solid #222; color: #fff; border-radius: 8px; }
+        button { width: 100%; padding: 15px; background: #fff; color: #000; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; }
+        .item-list { display: flex; align-items: center; gap: 10px; background: #111; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-size: 0.8rem; }
+        .btn-del { background: #ff4444; color: #fff; padding: 5px 10px; width: auto; font-size: 0.7rem; margin-left: 5px; border-radius: 4px; }
+        .btn-edit { background: #25D366; color: #000; padding: 5px 10px; width: auto; font-size: 0.7rem; margin-left: auto; border-radius: 4px; }
     </style>
 </head>
 <body>
 
-<!-- TELA DE LOGIN -->
-<div id="login-screen">
-    <div class="login-card">
-        <img src="logo.jpg" style="width: 120px; margin-bottom: 20px;">
-        <h2 style="margin-bottom: 20px; font-size: 0.9rem;">ACESSO RESTRITO</h2>
-        <input type="email" id="login-email" placeholder="E-mail">
-        <input type="password" id="login-pass" placeholder="Senha">
-        <button class="btn btn-add" onclick="login()">Entrar no Painel</button>
+    <div class="header-adm">
+        <img src="logo.jpg" class="logo-adm">
+        <p style="font-size: 0.7rem; color: #25D366; margin-top: 10px;">PAINEL DE CONTROLE PREMIUM</p>
     </div>
-</div>
 
-<!-- PAINEL ADM (Invisível até logar) -->
-<div id="admin-panel" style="display: none;">
-    <header class="admin-header">
-        <video autoplay loop muted playsinline>
-            <source src="video.mov" type="video/mp4">
-        </video>
-        <div class="header-content">
-            <h1>Painel de Controle</h1>
-            <p>B2 STREET URBAN PREMIUM</p>
-            <button class="btn btn-logout" onclick="logout()">Sair do Sistema</button>
-        </div>
-    </header>
-
-    <div class="container">
-        <div class="grid-forms">
-            <!-- Cadastrar Produto -->
-            <div class="card">
-                <h2><i class="fas fa-plus-circle"></i> Novo Produto</h2>
-                <input type="text" id="p-nome" placeholder="Nome do Produto">
-                <input type="text" id="p-preco" placeholder="Preço (ex: 199,90)">
-                <input type="text" id="p-img" placeholder="Link da Imagem (URL)">
-                <select id="p-cat">
-                    <option value="tenis">Tênis</option>
-                    <option value="camisas">Camisas</option>
-                    <option value="conjuntos">Conjuntos</option>
-                    <option value="shorts">Shorts</option>
-                    <option value="joias">Joias</option>
-                </select>
-                <button class="btn btn-add" onclick="saveProduct()">Publicar Produto</button>
-            </div>
-
-            <!-- Cadastrar Banner -->
-            <div class="card">
-                <h2><i class="fas fa-image"></i> Novo Banner Slider</h2>
-                <input type="text" id="b-url" placeholder="Link da Imagem do Banner">
-                <button class="btn btn-add" onclick="saveBanner()">Adicionar ao Carrossel</button>
-            </div>
-        </div>
-
-        <h2 style="margin-top: 50px; text-transform: uppercase; font-size: 1rem;">Gerenciar Itens</h2>
-        <div id="adm-list" class="product-list"></div>
+    <div class="card">
+        <h2><i class="fas fa-image"></i> GERENCIAR BANNERS</h2>
+        <input type="text" id="b-url" placeholder="Link da imagem do banner">
+        <button onclick="addBanner()">ADICIONAR BANNER</button>
+        <div id="lista-banners" style="margin-top: 20px;"></div>
     </div>
-</div>
+
+    <div class="card">
+        <h2><i class="fas fa-box"></i> NOVO PRODUTO</h2>
+        <input type="text" id="p-nome" placeholder="Nome do Produto">
+        <input type="text" id="p-preco" placeholder="Preco (Ex: 199,90)">
+        <select id="p-cat">
+            <option value="tenis">Tenis</option>
+            <option value="camisas">Camisas</option>
+            <option value="conjuntos">Conjuntos</option>
+            <option value="shorts">Shorts</option>
+            <option value="joias">Joias</option>
+        </select>
+        <input type="text" id="p-img" placeholder="Link da Imagem do Produto">
+        <button onclick="addProduto()" style="background: #25D366; color: #000;">CADASTRAR PRODUTO</button>
+    </div>
+
+    <div class="card">
+        <h2><i class="fas fa-list"></i> PRODUTOS CADASTRADOS</h2>
+        <div id="lista-produtos"></div>
+    </div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
 <script>
-// CONFIGURAÇÃO FIREBASE (IGUAL AO SEU SITE)
 const firebaseConfig = {
     apiKey: "AIzaSyD1Phuyxe5du5aMPG3rn4BxAiKdYp0uFuI",
     authDomain: "b2-street-501f4.firebaseapp.com",
@@ -144,89 +66,74 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
-const auth = firebase.auth();
 
-// FUNÇÕES DE LOGIN
-function login() {
-    const email = document.getElementById('login-email').value;
-    const pass = document.getElementById('login-pass').value;
-    auth.signInWithEmailAndPassword(email, pass)
-        .catch(err => alert("Erro ao acessar: " + err.message));
+// --- FUNÇÕES DE BANNER ---
+function addBanner() {
+    const url = document.getElementById('b-url').value;
+    if(url) db.ref('banners').push({ url }).then(() => {
+        document.getElementById('b-url').value = "";
+        alert("Banner Adicionado!");
+    });
 }
 
-function logout() { auth.signOut(); }
-
-// MONITOR DE AUTENTICAÇÃO
-auth.onAuthStateChanged(user => {
-    if (user) {
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('admin-panel').style.display = 'block';
-        loadItems();
-    } else {
-        document.getElementById('login-screen').style.display = 'flex';
-        document.getElementById('admin-panel').style.display = 'none';
-    }
+db.ref('banners').on('value', snap => {
+    const div = document.getElementById('lista-banners');
+    div.innerHTML = "";
+    snap.forEach(c => {
+        div.innerHTML += `
+        <div class="item-list">
+            <img src="${c.val().url}" style="width:40px; height:40px; object-fit:cover; border-radius:4px">
+            <span style="flex:1">Banner</span>
+            <button class="btn-del" onclick="db.ref('banners/${c.key}').remove()">Excluir</button>
+        </div>`;
+    });
 });
 
-// SALVAR DADOS
-function saveProduct() {
+// --- FUNÇÕES DE PRODUTO ---
+function addProduto() {
     const nome = document.getElementById('p-nome').value;
     const preco = document.getElementById('p-preco').value;
-    const imagem = document.getElementById('p-img').value;
     const categoria = document.getElementById('p-cat').value;
-
-    if(!nome || !preco || !imagem) return alert("Preencha tudo!");
-
-    db.ref('produtos').push({ nome, preco, imagem, categoria })
-    .then(() => { alert("Produto Salvo!"); location.reload(); });
-}
-
-function saveBanner() {
-    const url = document.getElementById('b-url').value;
-    if(!url) return alert("Insira o link!");
-    db.ref('banners').push({ url })
-    .then(() => { alert("Banner Salvo!"); location.reload(); });
-}
-
-// CARREGAR E DELETAR
-function loadItems() {
-    const list = document.getElementById('adm-list');
-    list.innerHTML = "";
-
-    // Produtos
-    db.ref('produtos').on('value', snap => {
-        snap.forEach(p => {
-            const data = p.val();
-            list.innerHTML += `
-                <div class="item-adm">
-                    <div class="item-info" style="display:flex; align-items:center;">
-                        <img src="${data.imagem}">
-                        <span>${data.nome}</span>
-                    </div>
-                    <i class="fas fa-trash btn-del" onclick="deleteItem('produtos/${p.key}')"></i>
-                </div>
-            `;
+    const imagem = document.getElementById('p-img').value;
+    if(nome && preco) {
+        db.ref('produtos').push({ nome, preco, categoria, imagem }).then(() => {
+            alert("Produto Cadastrado!");
+            document.getElementById('p-nome').value = "";
+            document.getElementById('p-preco').value = "";
+            document.getElementById('p-img').value = "";
         });
-    });
-
-    // Banners
-    db.ref('banners').on('value', snap => {
-        snap.forEach(b => {
-            list.innerHTML += `
-                <div class="item-adm" style="border-color: #555;">
-                    <span>BANNER: ${b.key.substring(0,5)}...</span>
-                    <i class="fas fa-trash btn-del" onclick="deleteItem('banners/${b.key}')"></i>
-                </div>
-            `;
-        });
-    });
-}
-
-function deleteItem(path) {
-    if(confirm("Deseja realmente excluir?")) {
-        db.ref(path).remove();
     }
 }
+
+// Editar Nome e Preço
+function editarProduto(id, nomeAtual, precoAtual) {
+    const novoNome = prompt("Novo nome do produto:", nomeAtual);
+    const novoPreco = prompt("Novo preço do produto (Ex: 199,90):", precoAtual);
+    
+    if (novoNome && novoPreco) {
+        db.ref('produtos/' + id).update({
+            nome: novoNome,
+            preco: novoPreco
+        }).then(() => alert("Produto atualizado!"));
+    }
+}
+
+db.ref('produtos').on('value', snap => {
+    const div = document.getElementById('lista-produtos');
+    div.innerHTML = "";
+    snap.forEach(c => {
+        const p = c.val();
+        div.innerHTML += `
+        <div class="item-list">
+            <img src="${p.imagem}" style="width:40px; height:40px; object-fit:cover; border-radius:4px">
+            <div style="flex:1">
+                <b>${p.nome}</b><br><small>R$ ${p.preco} - ${p.categoria}</small>
+            </div>
+            <button class="btn-edit" onclick="editarProduto('${c.key}', '${p.nome}', '${p.preco}')">EDITAR</button>
+            <button class="btn-del" onclick="confirm('Excluir produto?') && db.ref('produtos/${c.key}').remove()">Excluir</button>
+        </div>`;
+    });
+});
 </script>
 </body>
 </html>
