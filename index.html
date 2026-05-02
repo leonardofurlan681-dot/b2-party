@@ -82,7 +82,6 @@
 
     <!-- ABA 1: GERENCIAMENTO -->
     <div id="gerenciamento" class="tab-content active">
-        <!-- Manutenção de Banners, Produtos e Cupons conforme código original -->
         <div class="card">
             <h2><i class="fas fa-image"></i> GERENCIAR BANNERS</h2>
             <input type="text" id="b-url" placeholder="Link da imagem do banner">
@@ -121,7 +120,7 @@
         </div>
     </div>
 
-    <!-- ABA 2: ANOTAÇÕES DE PEDIDOS (MULTI-PRODUTOS) -->
+    <!-- ABA 2: ANOTAÇÕES DE PEDIDOS -->
     <div id="anotacoes" class="tab-content">
         <div class="card">
             <h2><i class="fas fa-user"></i> DADOS DO CLIENTE</h2>
@@ -140,13 +139,13 @@
                         <option value="conjuntos">Conjuntos</option>
                     </select>
                     <select id="temp-tam" style="flex:1"></select>
+                    <!-- NOVO: Preço individual do item -->
+                    <input type="text" id="temp-preco-item" placeholder="Preço Un." style="flex:1">
                     <input type="number" id="temp-qtd" value="1" min="1" style="flex:0.5" placeholder="Qtd">
                 </div>
-                <button onclick="adicionarItemNaLista()" style="background: #333; color: #fff; padding: 8px; font-size: 0.65rem;">+ ADICIONAR ESTE ITEM</button>
+                <button onclick="adicionarItemNaLista()" style="background: #333; color: #fff; padding: 8px; font-size: 0.65rem; margin-top: 5px;">+ ADICIONAR ESTE ITEM</button>
                 
-                <div id="carrinho-temporario" style="margin-top: 15px;">
-                    <!-- Itens adicionados aparecem aqui -->
-                </div>
+                <div id="carrinho-temporario" style="margin-top: 15px;"></div>
             </div>
 
             <div style="display: flex; gap: 10px;">
@@ -212,13 +211,20 @@ function adicionarItemNaLista() {
     const nome = document.getElementById('temp-nome').value;
     const tam = document.getElementById('temp-tam').value;
     const qtd = document.getElementById('temp-qtd').value;
-    const tipo = document.getElementById('temp-tipo').value;
+    const preco = document.getElementById('temp-preco-item').value;
 
-    if(!nome) return alert("Digite o nome do produto!");
+    if(!nome || !preco) return alert("Digite o nome e o preço do item!");
 
-    itensDoPedido.push({ nome, tam, qtd, tipo });
+    itensDoPedido.push({ nome, tam, qtd, preco });
     renderizarCarrinho();
+    
+    // Auto-soma opcional no campo de valor total
+    let total = 0;
+    itensDoPedido.forEach(i => total += (parseFloat(i.preco.replace(',','.')) * i.qtd));
+    document.getElementById('ped-valor-site').value = total.toFixed(2).replace('.',',');
+
     document.getElementById('temp-nome').value = "";
+    document.getElementById('temp-preco-item').value = "";
 }
 
 function renderizarCarrinho() {
@@ -227,7 +233,7 @@ function renderizarCarrinho() {
     itensDoPedido.forEach((item, index) => {
         div.innerHTML += `
             <div class="temp-item">
-                <span>${item.qtd}x ${item.nome} (${item.tam})</span>
+                <span>${item.qtd}x ${item.nome} (${item.tam}) - R$ ${item.preco}</span>
                 <span style="color:red; cursor:pointer" onclick="removerItemCarrinho(${index})">remover</span>
             </div>
         `;
@@ -255,7 +261,7 @@ function salvarPedidoCompleto() {
         status,
         data: new Date().toLocaleString('pt-BR')
     }).then(() => {
-        alert("Pedido completo salvo com sucesso!");
+        alert("Pedido completo salvo!");
         itensDoPedido = [];
         renderizarCarrinho();
         document.getElementById('ped-cliente').value = "";
@@ -264,15 +270,18 @@ function salvarPedidoCompleto() {
     });
 }
 
+// Escuta do Banco de Dados
 db.ref('anotacoes_pedidos').on('value', snap => {
     const div = document.getElementById('lista-anotacoes');
     div.innerHTML = "";
     snap.forEach(item => {
         const p = item.val();
         let listaItensHtml = "";
-        p.itens.forEach(i => {
-            listaItensHtml += `<div style="color:#eee; font-size:0.75rem">• ${i.qtd}x ${i.nome} - Tam: ${i.tam}</div>`;
-        });
+        if(p.itens) {
+            p.itens.forEach(i => {
+                listaItensHtml += `<div style="color:#eee; font-size:0.75rem">• ${i.qtd}x ${i.nome} (${i.tam}) - R$ ${i.preco}</div>`;
+            });
+        }
 
         div.innerHTML += `
         <div class="item-list">
@@ -281,7 +290,10 @@ db.ref('anotacoes_pedidos').on('value', snap => {
                     <span class="status-badge status-${p.status}">${p.status}</span><br>
                     <b style="font-size:1rem; color:#fff">${p.cliente}</b>
                 </div>
-                <button class="btn-del" onclick="db.ref('anotacoes_pedidos/${item.key}').remove()">🗑️</button>
+                <div style="display:flex; gap:5px;">
+                    <button class="btn-edit" onclick="editarPedido('${item.key}')">EDITAR</button>
+                    <button class="btn-del" onclick="db.ref('anotacoes_pedidos/${item.key}').remove()">🗑️</button>
+                </div>
             </div>
             <div style="margin: 10px 0;">
                 ${listaItensHtml}
@@ -290,16 +302,33 @@ db.ref('anotacoes_pedidos').on('value', snap => {
                 <div style="flex:1"><small>Venda:</small><br>R$ ${p.vSite}</div>
                 <div style="flex:1"><small>Lucro:</small><br><span class="lucro-text">R$ ${p.vLucro}</span></div>
             </div>
-            <div style="display:flex; gap:10px; margin-top:10px;">
-                <button class="btn-edit" onclick="alternarStatus('${item.key}', '${p.status}')">Mudar Status</button>
-            </div>
         </div>`;
     });
 });
 
-function alternarStatus(id, s) { db.ref('anotacoes_pedidos/' + id).update({ status: s === "pendente" ? "entregue" : "pendente" }); }
+// FUNÇÃO EDITAR PEDIDO (Mantendo o seu estilo de prompt rápido)
+function editarPedido(key) {
+    db.ref('anotacoes_pedidos/' + key).once('value').then(snap => {
+        const p = snap.val();
+        const novoNome = prompt("Editar Nome do Cliente:", p.cliente);
+        const novoVenda = prompt("Editar Valor Venda:", p.vSite);
+        const novoLucro = prompt("Editar Lucro:", p.vLucro);
+        
+        if(novoNome !== null) {
+            db.ref('anotacoes_pedidos/' + key).update({
+                cliente: novoNome,
+                vSite: novoVenda,
+                vLucro: novoLucro
+            });
+        }
+    });
+}
 
-// Funções Originais Mantidas
+function alternarStatus(id, s) { 
+    db.ref('anotacoes_pedidos/' + id).update({ status: s === "pendente" ? "entregue" : "pendente" }); 
+}
+
+// Restante das funções originais mantidas exatamente iguais
 function addBanner() {
     const url = document.getElementById('b-url').value;
     if(url) db.ref('banners').push({ url }).then(() => { document.getElementById('b-url').value = ""; alert("Banner OK!"); });
