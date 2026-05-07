@@ -6,66 +6,44 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; }
-        
         body { background: #050505; color: #fff; font-family: 'Segoe UI', sans-serif; padding: 20px; }
         .header-adm { text-align: center; margin-bottom: 30px; }
         .logo-adm { width: 120px; filter: drop-shadow(0 0 10px rgba(200,200,200,0.3)); }
         
-        /* Sistema de Abas */
-        .nav-tabs { display: flex; gap: 10px; margin-bottom: 25px; justify-content: center; }
+        /* Estética Silver */
+        .nav-tabs { display: flex; gap: 10px; margin-bottom: 25px; justify-content: center; flex-wrap: wrap; }
         .tab-btn { 
             background: #111; color: #888; border: 1px solid #333; padding: 12px 20px; 
             border-radius: 8px; cursor: pointer; font-size: 0.7rem; font-weight: bold; letter-spacing: 1px;
-            transition: 0.3s; width: auto;
+            transition: 0.3s;
         }
         .tab-btn.active { background: linear-gradient(180deg, #dcdcdc, #999999); color: #000; border: none; }
 
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        .card { 
-            background: #121212; 
-            border: 1px solid #444; 
-            padding: 20px; 
-            border-radius: 12px; 
-            margin-bottom: 25px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        }
+        .card { background: #121212; border: 1px solid #444; padding: 20px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        h2 { font-size: 0.8rem; letter-spacing: 2px; color: #aaa; margin-bottom: 20px; text-transform: uppercase; }
         
-        h2 { font-size: 0.8rem; letter-spacing: 2px; color: #aaa; margin-bottom: 20px; }
+        input, select { width: 100%; padding: 12px; margin-bottom: 15px; background: #000; border: 1px solid #333; color: #fff; border-radius: 6px; outline: none; font-family: inherit; }
+        button { width: 100%; padding: 15px; background: linear-gradient(180deg, #dcdcdc, #999999); color: #000; border: none; border-radius: 6px; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        button:hover { opacity: 0.8; }
         
-        input, select, textarea { 
-            width: 100%; padding: 12px; margin-bottom: 15px; 
-            background: #000; border: 1px solid #333; color: #fff; 
-            border-radius: 6px; outline: none; font-family: inherit;
-        }
-        
-        button { 
-            width: 100%; padding: 15px; 
-            background: linear-gradient(180deg, #dcdcdc, #999999); 
-            color: #000; border: none; border-radius: 6px; 
-            font-weight: 800; cursor: pointer; text-transform: uppercase;
-            box-shadow: inset 0 1px 1px rgba(255,255,255,0.5);
-            transition: 0.3s;
-        }
-        button:hover { background: linear-gradient(180deg, #e8e8e8, #b0b0b0); }
-        
-        .item-list { background: #0a0a0a; padding: 15px; border-radius: 6px; margin-bottom: 10px; font-size: 0.8rem; border: 1px solid #222; }
+        .item-list { background: #0a0a0a; padding: 15px; border-radius: 6px; margin-bottom: 10px; font-size: 0.8rem; border: 1px solid #444; }
         .item-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
         
-        .btn-del { background: #555; color: #fff; padding: 5px 10px; width: auto; font-size: 0.7rem; border-radius: 4px; border:none; cursor: pointer; }
-        .btn-edit { background: #dcdcdc; color: #000; padding: 5px 10px; width: auto; font-size: 0.7rem; border-radius: 4px; border:none; cursor: pointer; }
+        .btn-del { background: #444 !important; color: #fff !important; width: auto !important; padding: 5px 10px !important; font-size: 0.7rem !important; }
+        .btn-edit { background: #dcdcdc !important; color: #000 !important; width: auto !important; padding: 5px 10px !important; font-size: 0.7rem !important; }
+        .btn-save { background: #dcdcdc !important; color: #000 !important; width: auto !important; padding: 8px 15px !important; font-size: 0.7rem !important; margin-top: 5px; }
         
-        /* Estilo da Lista Temporária (Carrinho) */
+        .status-badge { padding: 3px 8px; border-radius: 4px; font-size: 0.6rem; font-weight: bold; text-transform: uppercase; display: inline-block; color: #000; background: #999; }
+        
         .temp-item { background: #1a1a1a; padding: 8px; border-radius: 5px; margin-bottom: 5px; font-size: 0.75rem; border-left: 3px solid #999; display: flex; justify-content: space-between; }
-        
-        .status-badge { padding: 2px 8px; border-radius: 4px; font-size: 0.6rem; font-weight: bold; text-transform: uppercase; }
-        .status-pendente { background: #664d00; color: #ffcc00; border: 1px solid #ffcc00; }
-        .status-entregue { background: #063b21; color: #00ff88; border: 1px solid #00ff88; }
-
         .finance-info { display: flex; gap: 10px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #333; }
-        .lucro-text { color: #00ff88; font-weight: bold; }
+        .lucro-text { color: #dcdcdc; font-weight: bold; }
         small { color: #888; text-transform: uppercase; font-size: 0.65rem; }
+
+        .prod-img-preview { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #444; }
     </style>
 </head>
 <body>
@@ -76,12 +54,76 @@
     </div>
 
     <div class="nav-tabs">
-        <div class="tab-btn active" onclick="openTab('gerenciamento')">GERENCIAMENTO</div>
-        <div class="tab-btn" onclick="openTab('anotacoes')">ANOTAÇÕES DE PEDIDOS</div>
+        <div class="tab-btn active" onclick="openTab('vendas-site')">PEDIDOS DO SITE</div>
+        <div class="tab-btn" onclick="openTab('anotacoes')">ANOTAÇÕES MANUAIS</div>
+        <div class="tab-btn" onclick="openTab('gerenciamento')">SITE & CUPONS</div>
     </div>
 
-    <!-- ABA 1: GERENCIAMENTO -->
-    <div id="gerenciamento" class="tab-content active">
+    <!-- ABA 1: PEDIDOS DO SITE -->
+    <div id="vendas-site" class="tab-content active">
+        <div class="card">
+            <h2><i class="fas fa-shopping-cart"></i> Pedidos Realizados no Site</h2>
+            <div id="lista-pedidos-site">Carregando pedidos...</div>
+        </div>
+    </div>
+
+    <!-- ABA 2: ANOTAÇÕES MANUAIS -->
+    <div id="anotacoes" class="tab-content">
+        <div class="card">
+            <h2><i class="fas fa-user"></i> CRIAR ANOTAÇÃO MANUAL</h2>
+            <input type="text" id="ped-cliente" placeholder="Nome do Cliente">
+            
+            <div style="background: #000; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 15px;">
+                <h3 style="font-size: 0.65rem; color: #888; margin-bottom: 10px;">ADICIONAR PRODUTOS:</h3>
+                <input type="text" id="temp-nome" placeholder="Produto (Ex: Jordan 4)">
+                <div style="display: flex; gap: 10px;">
+                    <select id="temp-tipo" onchange="atualizarTamanhos()" style="flex:1">
+                        <option value="tenis">Tênis</option>
+                        <option value="camisas">Camisas</option>
+                        <option value="conjuntos">Conjuntos</option>
+                        <option value="shorts">Shorts</option>
+                    </select>
+                    <select id="temp-tam" style="flex:1"></select>
+                    <input type="text" id="temp-preco-item" placeholder="Preço Un. (R$)" style="flex:1">
+                    <input type="number" id="temp-qtd" value="1" min="1" style="flex:0.5">
+                </div>
+                <button onclick="adicionarItemNaLista()" style="background: #333; color: #fff; padding: 10px; font-size: 0.7rem; margin-top: 10px;">+ ADICIONAR ITEM AO PEDIDO</button>
+                <div id="carrinho-temporario" style="margin-top: 15px;"></div>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <div style="flex:1">
+                    <label style="font-size: 0.6rem; color: #888;">VALOR TOTAL VENDA (R$):</label>
+                    <input type="text" id="ped-valor-site" placeholder="Ex: 500,00">
+                </div>
+                <div style="flex:1">
+                    <label style="font-size: 0.6rem; color: #888;">VALOR QUE EU GASTO (R$):</label>
+                    <input type="text" id="ped-valor-gasto" placeholder="Ex: 250,00">
+                </div>
+            </div>
+
+            <select id="ped-status">
+                <option value="pendente">Status: Pendente</option>
+                <option value="entregue">Status: Entregue</option>
+            </select>
+            <button onclick="salvarPedidoCompleto()">FINALIZAR E SALVAR ANOTAÇÃO</button>
+        </div>
+        <div id="lista-anotacoes"></div>
+    </div>
+
+    <!-- ABA 3: GERENCIAMENTO -->
+    <div id="gerenciamento" class="tab-content">
+        <!-- SEÇÃO CUPONS -->
+        <div class="card">
+            <h2><i class="fas fa-ticket-alt"></i> SISTEMA DE CUPONS</h2>
+            <div style="background: #000; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 15px;">
+                <input type="text" id="cupom-nome" placeholder="NOME DO CUPOM (Ex: B2STREET10)">
+                <input type="number" id="cupom-desconto" placeholder="DESCONTO EM % (Apenas números)">
+                <button onclick="addCupom()">CRIAR NOVO CUPOM</button>
+            </div>
+            <div id="lista-cupons"></div>
+        </div>
+
         <div class="card">
             <h2><i class="fas fa-image"></i> GERENCIAR BANNERS</h2>
             <input type="text" id="b-url" placeholder="Link da imagem do banner">
@@ -90,95 +132,24 @@
         </div>
 
         <div class="card">
-            <h2><i class="fas fa-box"></i> NOVO PRODUTO</h2>
-            <input type="text" id="p-nome" placeholder="Nome do Produto">
-            <input type="text" id="p-preco" placeholder="Preço (Ex: 199,90)">
-            <select id="p-cat">
-                <option value="tenis">Tênis</option>
-                <option value="chinelos">Chinelos</option>
-                <option value="raul">Raul</option>
-                <option value="camisas">Camisas</option>
-                <option value="conjuntos">Conjuntos</option>
-                <option value="shorts">Shorts</option>
-                <option value="joias">Joias</option>
-            </select>
-            <input type="text" id="p-img" placeholder="Link da Imagem do Produto">
-            <button onclick="addProduto()">CADASTRAR PRODUTO</button>
-        </div>
-
-        <div class="card">
-            <h2><i class="fas fa-ticket-alt"></i> GERENCIAR CUPONS</h2>
-            <input type="text" id="cupom-codigo" placeholder="Código do Cupom (EX: B2PRIME)">
-            <input type="number" id="cupom-valor" placeholder="Valor do Desconto em R$ (EX: 50)">
-            <label style="font-size: 0.65rem; color: #888; display: block; margin-bottom: 5px;">VÁLIDO PARA CATEGORIA:</label>
-            <select id="cupom-cat">
-                <option value="todos">Todas as Categorias</option>
-                <option value="tenis">Tênis</option>
-                <option value="chinelos">Chinelos</option>
-                <option value="raul">Raul</option>
-                <option value="camisas">Camisas</option>
-                <option value="conjuntos">Conjuntos</option>
-                <option value="shorts">Shorts</option>
-                <option value="joias">Joias</option>
-            </select>
-            <button onclick="addCupom()">CRIAR CUPOM</button>
-            <div id="lista-cupons" style="margin-top: 20px;"></div>
-        </div>
-
-        <div class="card">
-            <h2><i class="fas fa-list"></i> PRODUTOS CADASTRADOS</h2>
+            <h2><i class="fas fa-box"></i> GERENCIAR PRODUTOS DO SITE</h2>
+            <div style="background: #000; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 20px;">
+                <input type="text" id="p-nome" placeholder="Nome do Produto">
+                <input type="text" id="p-preco" placeholder="Preço (Ex: 199,90)">
+                <select id="p-cat">
+                    <option value="tenis">Tênis</option>
+                    <option value="chinelos">Chinelos</option>
+                    <option value="raul">Raul</option>
+                    <option value="camisas">Camisas</option>
+                    <option value="conjuntos">Conjuntos</option>
+                    <option value="shorts">Shorts</option>
+                    <option value="joias">Joias</option>
+                </select>
+                <input type="text" id="p-img" placeholder="Link da Imagem">
+                <button onclick="addProduto()">CADASTRAR PRODUTO</button>
+            </div>
             <div id="lista-produtos"></div>
         </div>
-    </div>
-
-    <!-- ABA 2: ANOTAÇÕES DE PEDIDOS -->
-    <div id="anotacoes" class="tab-content">
-        <div class="card">
-            <h2><i class="fas fa-user"></i> DADOS DO CLIENTE</h2>
-            <input type="text" id="ped-cliente" placeholder="Nome do Cliente">
-            
-            <div style="background: #000; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 15px;">
-                <h3 style="font-size: 0.65rem; color: #888; margin-bottom: 10px;">ADICIONAR PRODUTOS AO PEDIDO:</h3>
-                <input type="text" id="temp-nome" placeholder="Nome do Produto (Ex: Jordan 4)">
-                
-                <div style="display: flex; gap: 10px;">
-                    <select id="temp-tipo" onchange="atualizarTamanhos()" style="flex:1">
-                        <option value="tenis">Tênis</option>
-                        <option value="camisas">Camisas</option>
-                        <option value="calças">Calças</option>
-                        <option value="shorts">Shorts</option>
-                        <option value="conjuntos">Conjuntos</option>
-                    </select>
-                    <select id="temp-tam" style="flex:1"></select>
-                    <!-- NOVO: Preço individual do item -->
-                    <input type="text" id="temp-preco-item" placeholder="Preço Un." style="flex:1">
-                    <input type="number" id="temp-qtd" value="1" min="1" style="flex:0.5" placeholder="Qtd">
-                </div>
-                <button onclick="adicionarItemNaLista()" style="background: #333; color: #fff; padding: 8px; font-size: 0.65rem; margin-top: 5px;">+ ADICIONAR ESTE ITEM</button>
-                
-                <div id="carrinho-temporario" style="margin-top: 15px;"></div>
-            </div>
-
-            <div style="display: flex; gap: 10px;">
-                <div style="flex:1">
-                    <label style="font-size: 0.6rem; color: #888;">VALOR TOTAL SITE (R$):</label>
-                    <input type="text" id="ped-valor-site" placeholder="Ex: 599,90">
-                </div>
-                <div style="flex:1">
-                    <label style="font-size: 0.6rem; color: #888;">LUCRO TOTAL (R$):</label>
-                    <input type="text" id="ped-valor-lucro" placeholder="Ex: 240,00">
-                </div>
-            </div>
-
-            <select id="ped-status">
-                <option value="pendente">Status: Pendente</option>
-                <option value="entregue">Status: Entregue</option>
-            </select>
-            
-            <button onclick="salvarPedidoCompleto()">FINALIZAR E SALVAR PEDIDO</button>
-        </div>
-
-        <div id="lista-anotacoes"></div>
     </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -197,13 +168,11 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-let itensDoPedido = [];
-
 function openTab(tabId) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
-    if(event) event.currentTarget.classList.add('active');
+    event.currentTarget.classList.add('active');
 }
 
 function atualizarTamanhos() {
@@ -218,188 +187,179 @@ function atualizarTamanhos() {
 }
 atualizarTamanhos();
 
+// --- SISTEMA DE CUPONS ---
+function addCupom() {
+    const nome = document.getElementById('cupom-nome').value.toUpperCase().trim();
+    const desc = document.getElementById('cupom-desconto').value;
+    if(!nome || !desc) return alert("Preencha o nome e a porcentagem!");
+    db.ref('cupons').child(nome).set({ porcentagem: desc }).then(() => {
+        alert("Cupom criado!");
+        document.getElementById('cupom-nome').value = "";
+        document.getElementById('cupom-desconto').value = "";
+    });
+}
+
+db.ref('cupons').on('value', snap => {
+    const div = document.getElementById('lista-cupons');
+    div.innerHTML = "";
+    snap.forEach(c => {
+        div.innerHTML += `
+        <div class="item-list" style="display:flex; justify-content:space-between; align-items:center;">
+            <span><i class="fas fa-tag"></i> <b>${c.key}</b> (${c.val().porcentagem}% OFF)</span>
+            <button class="btn-del" onclick="db.ref('cupons/${c.key}').remove()">EXCLUIR</button>
+        </div>`;
+    });
+});
+
+// --- PEDIDOS DO SITE (ENDEREÇOS E EXCLUSÃO) ---
+db.ref('todos_pedidos').on('value', snap => {
+    const div = document.getElementById('lista-pedidos-site');
+    div.innerHTML = "";
+    snap.forEach(child => {
+        const p = child.val();
+        const id = child.key;
+        let totalLimpo = p.total ? p.total.toString().toLowerCase().replace(/total:/g, '').trim() : '0,00';
+        
+        div.innerHTML += `
+            <div class="item-list" style="border-left: 4px solid #999">
+                <div class="item-header">
+                    <div><span class="status-badge">${p.status || 'Pendente'}</span><br><b>${p.cliente || 'Sem Nome'}</b></div>
+                    <button class="btn-del" onclick="if(confirm('Excluir este pedido?')) firebase.database().ref('todos_pedidos/${id}').remove()">🗑️ EXCLUIR</button>
+                </div>
+                <div style="font-size:0.75rem; color:#aaa; margin-bottom:10px; background: #111; padding: 10px; border-radius: 5px;">
+                    <b>ENTREGA:</b><br>
+                    CEP: ${p.cep || '---'} | WhatsApp: ${p.whatsapp || '---'}<br>
+                    End: ${p.endereco || '---'}<br>
+                    CPF: ${p.cpf || '---'}
+                </div>
+                <div style="margin:10px 0; background:#111; padding:8px; border-radius:4px;">
+                    ${p.produtos ? p.produtos.map(i => `• ${i.nome} (${i.tamanho || '---'})`).join('<br>') : 'Sem itens'}
+                    <div style="margin-top:5px; color:#dcdcdc; font-weight:bold">Total: R$ ${totalLimpo}</div>
+                </div>
+                <input type="text" id="rastreio-${id}" placeholder="Código de Rastreio" value="${p.rastreio || ''}" style="margin-bottom:5px; padding:8px; font-size:0.7rem;">
+                <div style="display:flex; gap:5px">
+                    <button onclick="db.ref('todos_pedidos/${id}').update({rastreio: document.getElementById('rastreio-${id}').value}); alert('Rastreio Salvo!')" style="padding:8px; font-size:0.6rem; flex:1">SALVAR RASTREIO</button>
+                    <select onchange="db.ref('todos_pedidos/${id}').update({status: this.value})" style="flex:1; padding:8px; font-size:0.6rem; margin:0">
+                        <option value="">Status...</option>
+                        <option value="Preparando">Preparando</option>
+                        <option value="Enviado">Enviado</option>
+                        <option value="Entregue">Entregue</option>
+                    </select>
+                </div>
+            </div>`;
+    });
+});
+
+// --- ANOTAÇÕES MANUAIS ---
+let itensDoPedido = [];
 function adicionarItemNaLista() {
     const nome = document.getElementById('temp-nome').value;
     const tam = document.getElementById('temp-tam').value;
     const qtd = document.getElementById('temp-qtd').value;
     const preco = document.getElementById('temp-preco-item').value;
-
-    if(!nome || !preco) return alert("Digite o nome e o preço do item!");
-
+    if(!nome || !preco) return alert("Preencha os dados do item!");
     itensDoPedido.push({ nome, tam, qtd, preco });
     renderizarCarrinho();
-    
-    // Auto-soma opcional no campo de valor total
     let total = 0;
     itensDoPedido.forEach(i => total += (parseFloat(i.preco.replace(',','.')) * i.qtd));
     document.getElementById('ped-valor-site').value = total.toFixed(2).replace('.',',');
-
-    document.getElementById('temp-nome').value = "";
-    document.getElementById('temp-preco-item').value = "";
 }
 
 function renderizarCarrinho() {
     const div = document.getElementById('carrinho-temporario');
     div.innerHTML = "";
     itensDoPedido.forEach((item, index) => {
-        div.innerHTML += `
-            <div class="temp-item">
-                <span>${item.qtd}x ${item.nome} (${item.tam}) - R$ ${item.preco}</span>
-                <span style="color:red; cursor:pointer" onclick="removerItemCarrinho(${index})">remover</span>
-            </div>
-        `;
+        div.innerHTML += `<div class="temp-item"><span>${item.qtd}x ${item.nome} (${item.tam})</span><span style="color:red; cursor:pointer" onclick="itensDoPedido.splice(${index}, 1); renderizarCarrinho()">remover</span></div>`;
     });
-}
-
-function removerItemCarrinho(index) {
-    itensDoPedido.splice(index, 1);
-    renderizarCarrinho();
 }
 
 function salvarPedidoCompleto() {
     const cliente = document.getElementById('ped-cliente').value;
-    const vSite = document.getElementById('ped-valor-site').value;
-    const vLucro = document.getElementById('ped-valor-lucro').value;
+    const vVenda = document.getElementById('ped-valor-site').value;
+    const vGasto = document.getElementById('ped-valor-gasto').value;
     const status = document.getElementById('ped-status').value;
-
-    if(!cliente || itensDoPedido.length === 0) return alert("Preencha o cliente e adicione pelo menos 1 produto!");
-
+    const vendaNum = parseFloat(vVenda.replace(',','.'));
+    const gastoNum = parseFloat(vGasto.replace(',','.')) || 0;
+    const lucro = (vendaNum - gastoNum).toFixed(2).replace('.',',');
     db.ref('anotacoes_pedidos').push({
-        cliente,
-        itens: itensDoPedido,
-        vSite,
-        vLucro,
-        status,
-        data: new Date().toLocaleString('pt-BR')
+        cliente, itens: itensDoPedido, vVenda, vGasto: vGasto || "0,00", vLucro: lucro, status, data: new Date().toLocaleString('pt-BR')
     }).then(() => {
-        alert("Pedido completo salvo!");
-        itensDoPedido = [];
-        renderizarCarrinho();
-        document.getElementById('ped-cliente').value = "";
-        document.getElementById('ped-valor-site').value = "";
-        document.getElementById('ped-valor-lucro').value = "";
+        alert("Anotação salva!");
+        itensDoPedido = []; renderizarCarrinho();
+        document.getElementById('ped-cliente').value = ""; document.getElementById('ped-valor-site').value = ""; document.getElementById('ped-valor-gasto').value = "";
     });
 }
 
-// Escuta do Banco de Dados
 db.ref('anotacoes_pedidos').on('value', snap => {
     const div = document.getElementById('lista-anotacoes');
     div.innerHTML = "";
     snap.forEach(item => {
         const p = item.val();
-        let listaItensHtml = "";
-        if(p.itens) {
-            p.itens.forEach(i => {
-                listaItensHtml += `<div style="color:#eee; font-size:0.75rem">• ${i.qtd}x ${i.nome} (${i.tam}) - R$ ${i.preco}</div>`;
-            });
-        }
-
+        let prodHtml = p.itens ? p.itens.map(i => `<div style="font-size:0.75rem">• ${i.qtd}x ${i.nome} (${i.tam})</div>`).join('') : '';
         div.innerHTML += `
         <div class="item-list">
             <div class="item-header">
-                <div>
-                    <span class="status-badge status-${p.status}">${p.status}</span><br>
-                    <b style="font-size:1rem; color:#fff">${p.cliente}</b>
-                </div>
-                <div style="display:flex; gap:5px;">
-                    <button class="btn-edit" onclick="editarPedido('${item.key}')">EDITAR</button>
-                    <button class="btn-del" onclick="db.ref('anotacoes_pedidos/${item.key}').remove()">🗑️</button>
-                </div>
+                <div><span class="status-badge">${p.status}</span><br><b>${p.cliente}</b></div>
+                <button class="btn-del" onclick="db.ref('anotacoes_pedidos/${item.key}').remove()">🗑️</button>
             </div>
-            <div style="margin: 10px 0;">
-                ${listaItensHtml}
-            </div>
+            <div style="margin:10px 0;">${prodHtml}</div>
             <div class="finance-info">
-                <div style="flex:1"><small>Venda:</small><br>R$ ${p.vSite}</div>
+                <div style="flex:1"><small>Venda:</small><br>R$ ${p.vVenda}</div>
                 <div style="flex:1"><small>Lucro:</small><br><span class="lucro-text">R$ ${p.vLucro}</span></div>
             </div>
         </div>`;
     });
 });
 
-// FUNÇÃO EDITAR PEDIDO (Mantendo o seu estilo de prompt rápido)
-function editarPedido(key) {
-    db.ref('anotacoes_pedidos/' + key).once('value').then(snap => {
-        const p = snap.val();
-        const novoNome = prompt("Editar Nome do Cliente:", p.cliente);
-        const novoVenda = prompt("Editar Valor Venda:", p.vSite);
-        const novoLucro = prompt("Editar Lucro:", p.vLucro);
-        
-        if(novoNome !== null) {
-            db.ref('anotacoes_pedidos/' + key).update({
-                cliente: novoNome,
-                vSite: novoVenda,
-                vLucro: novoLucro
-            });
-        }
-    });
-}
-
-function alternarStatus(id, s) { 
-    db.ref('anotacoes_pedidos/' + id).update({ status: s === "pendente" ? "entregue" : "pendente" }); 
-}
-
-// Restante das funções originais mantidas exatamente iguais
+// --- SITE (BANNERS E PRODUTOS) ---
 function addBanner() {
     const url = document.getElementById('b-url').value;
-    if(url) db.ref('banners').push({ url }).then(() => { document.getElementById('b-url').value = ""; alert("Banner OK!"); });
+    if(url) db.ref('banners').push({ url }).then(() => { document.getElementById('b-url').value = ""; });
 }
 db.ref('banners').on('value', snap => {
     const div = document.getElementById('lista-banners'); div.innerHTML = "";
-    snap.forEach(c => {
-        div.innerHTML += `<div class="item-list" style="display:flex; align-items:center; gap:10px;">
-            <img src="${c.val().url}" style="width:40px; height:40px; object-fit:cover; border-radius:4px">
-            <span style="flex:1">Banner</span>
-            <button class="btn-del" onclick="db.ref('banners/${c.key}').remove()">Excluir</button>
-        </div>`;
-    });
+    snap.forEach(c => { div.innerHTML += `<div class="item-list" style="display:flex; justify-content:space-between; align-items:center;"><img src="${c.val().url}" height="40"> <button class="btn-del" onclick="db.ref('banners/${c.key}').remove()">X</button></div>`; });
 });
-function addCupom() {
-    const codigo = document.getElementById('cupom-codigo').value.toUpperCase().trim();
-    const valor = document.getElementById('cupom-valor').value;
-    const categoria = document.getElementById('cupom-cat').value;
-    if(codigo && valor) {
-        db.ref('cupons/' + codigo).set({ 
-            valor: parseFloat(valor),
-            categoria: categoria 
-        })
-        .then(() => { alert("Cupom OK!"); document.getElementById('cupom-codigo').value = ""; document.getElementById('cupom-valor').value = ""; });
-    }
-}
-db.ref('cupons').on('value', snap => {
-    const div = document.getElementById('lista-cupons'); div.innerHTML = "";
-    snap.forEach(c => {
-        const dados = c.val();
-        div.innerHTML += `<div class="item-list"><span style="flex:1"><b>${c.key}</b> - R$ ${dados.valor} <br> <small>Cat: ${dados.categoria}</small></span>
-            <button class="btn-del" onclick="db.ref('cupons/${c.key}').remove()">Excluir</button></div>`;
-    });
-});
+
 function addProduto() {
     const nome = document.getElementById('p-nome').value;
     const preco = document.getElementById('p-preco').value;
-    const categoria = document.getElementById('p-cat').value;
-    const imagem = document.getElementById('p-img').value;
-    if(nome && preco && imagem) {
-        db.ref('produtos').push({ nome, preco, categoria, imagem }).then(() => {
-            alert("Produto OK!"); document.getElementById('p-nome').value = ""; document.getElementById('p-preco').value = ""; document.getElementById('p-img').value = "";
-        });
-    }
+    const cat = document.getElementById('p-cat').value;
+    const img = document.getElementById('p-img').value;
+    if(nome && preco) db.ref('produtos').push({ nome, preco, categoria: cat, imagem: img }).then(() => { alert("Produto cadastrado!"); });
 }
+
 db.ref('produtos').on('value', snap => {
     const div = document.getElementById('lista-produtos'); div.innerHTML = "";
     snap.forEach(c => {
-        const p = c.val();
-        div.innerHTML += `<div class="item-list" style="display:flex; align-items:center; gap:10px;">
-            <img src="${p.imagem}" style="width:40px; height:40px; object-fit:cover; border-radius:4px">
-            <span style="flex:1">${p.nome} <br> <small>R$ ${p.preco}</small></span>
-            <button class="btn-edit" onclick="editarProduto('${c.key}', '${p.nome}', '${p.preco}')">Editar</button>
-            <button class="btn-del" onclick="db.ref('produtos/${c.key}').remove()">Excluir</button>
+        const prod = c.val();
+        const id = c.key;
+        div.innerHTML += `
+        <div class="item-list">
+            <div style="display:flex; gap:10px; align-items:center;">
+                <img src="${prod.imagem}" class="prod-img-preview" onerror="this.src='https://via.placeholder.com/50'">
+                <div style="flex:1"><b>${prod.nome}</b><br>R$ ${prod.preco}</div>
+                <div style="display:flex; gap:5px;">
+                    <button class="btn-edit" onclick="document.getElementById('edit-box-${id}').style.display='block'"><i class="fas fa-edit"></i></button>
+                    <button class="btn-del" onclick="if(confirm('Excluir?')) db.ref('produtos/${id}').remove()">🗑️</button>
+                </div>
+            </div>
+            <div id="edit-box-${id}" style="display:none; margin-top:10px; border-top:1px solid #333; padding-top:10px;">
+                <input type="text" id="edit-nome-${id}" value="${prod.nome}" style="padding:8px;">
+                <input type="text" id="edit-preco-${id}" value="${prod.preco}" style="padding:8px;">
+                <button class="btn-save" onclick="salvarEdicao('${id}')">SALVAR</button>
+            </div>
         </div>`;
     });
 });
-function editarProduto(id, n, p) {
-    const novoN = prompt("Nome:", n); const novoP = prompt("Preço:", p);
-    if (novoN && novoP) db.ref('produtos/' + id).update({ nome: novoN, preco: novoP });
+
+function salvarEdicao(id) {
+    const nome = document.getElementById('edit-nome-' + id).value;
+    const preco = document.getElementById('edit-preco-' + id).value;
+    db.ref('produtos/' + id).update({ nome, preco }).then(() => {
+        alert("Atualizado!");
+        document.getElementById('edit-box-' + id).style.display='none';
+    });
 }
 </script>
 </body>
