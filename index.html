@@ -104,6 +104,7 @@
 
             <select id="ped-status">
                 <option value="pendente">Status: Pendente</option>
+                <option value="preparando">Status: Preparando</option>
                 <option value="entregue">Status: Entregue</option>
             </select>
             <button onclick="salvarPedidoCompleto()">FINALIZAR E SALVAR ANOTAÇÃO</button>
@@ -211,7 +212,7 @@ db.ref('cupons').on('value', snap => {
     });
 });
 
-// --- PEDIDOS DO SITE (ENDEREÇOS E EXCLUSÃO) ---
+// --- PEDIDOS DO SITE ---
 db.ref('todos_pedidos').on('value', snap => {
     const div = document.getElementById('lista-pedidos-site');
     div.innerHTML = "";
@@ -282,7 +283,7 @@ function salvarPedidoCompleto() {
     const gastoNum = parseFloat(vGasto.replace(',','.')) || 0;
     const lucro = (vendaNum - gastoNum).toFixed(2).replace('.',',');
     db.ref('anotacoes_pedidos').push({
-        cliente, itens: itensDoPedido, vVenda, vGasto: vGasto || "0,00", vLucro: lucro, status, data: new Date().toLocaleString('pt-BR')
+        cliente, itens: itensDoPedido, vVenda, vGasto: vGasto || "0,00", vLucro: lucro, status, rastreio: "", data: new Date().toLocaleString('pt-BR')
     }).then(() => {
         alert("Anotação salva!");
         itensDoPedido = []; renderizarCarrinho();
@@ -295,21 +296,64 @@ db.ref('anotacoes_pedidos').on('value', snap => {
     div.innerHTML = "";
     snap.forEach(item => {
         const p = item.val();
+        const id = item.key;
         let prodHtml = p.itens ? p.itens.map(i => `<div style="font-size:0.75rem">• ${i.qtd}x ${i.nome} (${i.tam})</div>`).join('') : '';
         div.innerHTML += `
         <div class="item-list">
             <div class="item-header">
                 <div><span class="status-badge">${p.status}</span><br><b>${p.cliente}</b></div>
-                <button class="btn-del" onclick="db.ref('anotacoes_pedidos/${item.key}').remove()">🗑️</button>
+                <div style="display:flex; gap:5px">
+                   <button class="btn-edit" onclick="document.getElementById('edit-anot-${id}').style.display='block'"><i class="fas fa-edit"></i></button>
+                   <button class="btn-del" onclick="if(confirm('Excluir?')) db.ref('anotacoes_pedidos/${id}').remove()">🗑️</button>
+                </div>
             </div>
             <div style="margin:10px 0;">${prodHtml}</div>
+            
+            <div id="edit-anot-${id}" style="display:none; background:#1a1a1a; padding:10px; border-radius:8px; margin-bottom:10px;">
+                <label style="font-size:0.6rem; color:#888;">NOME DO CLIENTE:</label>
+                <input type="text" id="edit-cli-nome-${id}" value="${p.cliente}" style="padding:8px; font-size:0.7rem;">
+                <label style="font-size:0.6rem; color:#888;">VALOR DA VENDA (R$):</label>
+                <input type="text" id="edit-cli-venda-${id}" value="${p.vVenda}" style="padding:8px; font-size:0.7rem;">
+                <button class="btn-save" onclick="salvarEdicaoAnotacao('${id}', '${p.vGasto}')">SALVAR ALTERAÇÕES</button>
+            </div>
+
             <div class="finance-info">
                 <div style="flex:1"><small>Venda:</small><br>R$ ${p.vVenda}</div>
                 <div style="flex:1"><small>Lucro:</small><br><span class="lucro-text">R$ ${p.vLucro}</span></div>
             </div>
+            
+            <div style="margin-top:15px;">
+                <input type="text" id="rastreio-anot-${id}" placeholder="Código de Rastreio" value="${p.rastreio || ''}" style="margin-bottom:5px; padding:8px; font-size:0.7rem;">
+                <div style="display:flex; gap:5px">
+                    <button onclick="db.ref('anotacoes_pedidos/${id}').update({rastreio: document.getElementById('rastreio-anot-${id}').value}); alert('Rastreio Atualizado!')" style="padding:8px; font-size:0.6rem; flex:1">SALVAR RASTREIO</button>
+                    <select onchange="db.ref('anotacoes_pedidos/${id}').update({status: this.value})" style="flex:1; padding:8px; font-size:0.6rem; margin:0">
+                        <option value="">Alterar Status...</option>
+                        <option value="pendente">Pendente</option>
+                        <option value="preparando">Preparando</option>
+                        <option value="entregue">Entregue</option>
+                    </select>
+                </div>
+            </div>
         </div>`;
     });
 });
+
+function salvarEdicaoAnotacao(id, vGasto) {
+    const novoNome = document.getElementById('edit-cli-nome-' + id).value;
+    const novaVenda = document.getElementById('edit-cli-venda-' + id).value;
+    const vendaNum = parseFloat(novaVenda.replace(',','.'));
+    const gastoNum = parseFloat(vGasto.replace(',','.'));
+    const novoLucro = (vendaNum - gastoNum).toFixed(2).replace('.',',');
+
+    db.ref('anotacoes_pedidos/' + id).update({
+        cliente: novoNome,
+        vVenda: novaVenda,
+        vLucro: novoLucro
+    }).then(() => {
+        alert("Dados do cliente atualizados!");
+        document.getElementById('edit-anot-' + id).style.display = 'none';
+    });
+}
 
 // --- SITE (BANNERS E PRODUTOS) ---
 function addBanner() {
