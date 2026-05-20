@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!<!DOCTYPE html>
 <html>
 <head>
     <title>ADM | B2 STREET</title>
@@ -40,7 +40,7 @@
         
         .temp-item { background: #1a1a1a; padding: 8px; border-radius: 5px; margin-bottom: 5px; font-size: 0.75rem; border-left: 3px solid #999; display: flex; justify-content: space-between; }
         .finance-info { display: flex; gap: 10px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #333; }
-        .lucro-text { color: #dcdcdc; font-weight: bold; }
+        .lucro-text { color: #00ff00; font-weight: bold; }
         small { color: #888; text-transform: uppercase; font-size: 0.65rem; }
 
         .prod-img-preview { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #444; }
@@ -119,7 +119,17 @@
             <h2><i class="fas fa-ticket-alt"></i> SISTEMA DE CUPONS</h2>
             <div style="background: #000; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 15px;">
                 <input type="text" id="cupom-nome" placeholder="NOME DO CUPOM (Ex: B2STREET10)">
-                <input type="number" id="cupom-desconto" placeholder="DESCONTO EM % (Apenas números)">
+                <input type="number" id="cupom-desconto" placeholder="DESCONTO EM R$ (Apenas números)">
+                <select id="cupom-tipo-valido">
+                    <option value="todos">Válido para: Todos os Produtos</option>
+                    <option value="tenis">Tênis</option>
+                    <option value="chinelos">Chinelos</option>
+                    <option value="raul">Raul</option>
+                    <option value="camisas">Camisas</option>
+                    <option value="conjuntos">Conjuntos</option>
+                    <option value="shorts">Shorts</option>
+                    <option value="joias">Joias</option>
+                </select>
                 <button onclick="addCupom()">CRIAR NOVO CUPOM</button>
             </div>
             <div id="lista-cupons"></div>
@@ -192,11 +202,13 @@ atualizarTamanhos();
 function addCupom() {
     const nome = document.getElementById('cupom-nome').value.toUpperCase().trim();
     const desc = document.getElementById('cupom-desconto').value;
-    if(!nome || !desc) return alert("Preencha o nome e a porcentagem!");
-    db.ref('cupons').child(nome).set({ porcentagem: desc }).then(() => {
+    const tipoValido = document.getElementById('cupom-tipo-valido').value;
+    if(!nome || !desc) return alert("Preencha o nome e o valor de desconto!");
+    db.ref('cupons').child(nome).set({ valor: desc, tipoValido: tipoValido }).then(() => {
         alert("Cupom criado!");
         document.getElementById('cupom-nome').value = "";
         document.getElementById('cupom-desconto').value = "";
+        document.getElementById('cupom-tipo-valido').value = "todos";
     });
 }
 
@@ -204,13 +216,24 @@ db.ref('cupons').on('value', snap => {
     const div = document.getElementById('lista-cupons');
     div.innerHTML = "";
     snap.forEach(c => {
+        const dados = c.val();
+        const valorExibido = dados.valor || dados.porcentagem || "0";
+        const tipoExibido = dados.tipoValido ? dados.tipoValido.toUpperCase() : "TODOS";
         div.innerHTML += `
         <div class="item-list" style="display:flex; justify-content:space-between; align-items:center;">
-            <span><i class="fas fa-tag"></i> <b>${c.key}</b> (${c.val().porcentagem}% OFF)</span>
+            <span><i class="fas fa-tag"></i> <b>${c.key}</b> (R$ ${valorExibido} OFF - Válido: ${tipoExibido})</span>
             <button class="btn-del" onclick="db.ref('cupons/${c.key}').remove()">EXCLUIR</button>
         </div>`;
     });
 });
+
+// Helper para definir cor do status badge
+function obterEstiloStatus(status) {
+    const st = String(status).toLowerCase();
+    if (st === 'entregue') return 'background-color: #00ff00; color: #000;';
+    if (st === 'preparando') return 'background-color: #ffff00; color: #000;';
+    return 'background: #999; color: #000;';
+}
 
 // --- PEDIDOS DO SITE ---
 db.ref('todos_pedidos').on('value', snap => {
@@ -220,11 +243,12 @@ db.ref('todos_pedidos').on('value', snap => {
         const p = child.val();
         const id = child.key;
         let totalLimpo = p.total ? p.total.toString().toLowerCase().replace(/total:/g, '').trim() : '0,00';
+        const estiloStatus = obterEstiloStatus(p.status || 'Pendente');
         
         div.innerHTML += `
             <div class="item-list" style="border-left: 4px solid #999">
                 <div class="item-header">
-                    <div><span class="status-badge">${p.status || 'Pendente'}</span><br><b>${p.cliente || 'Sem Nome'}</b></div>
+                    <div><span class="status-badge" style="${estiloStatus}">${p.status || 'Pendente'}</span><br><b>${p.cliente || 'Sem Nome'}</b></div>
                     <button class="btn-del" onclick="if(confirm('Excluir este pedido?')) firebase.database().ref('todos_pedidos/${id}').remove()">🗑️ EXCLUIR</button>
                 </div>
                 <div style="font-size:0.75rem; color:#aaa; margin-bottom:10px; background: #111; padding: 10px; border-radius: 5px;">
@@ -298,10 +322,12 @@ db.ref('anotacoes_pedidos').on('value', snap => {
         const p = item.val();
         const id = item.key;
         let prodHtml = p.itens ? p.itens.map(i => `<div style="font-size:0.75rem">• ${i.qtd}x ${i.nome} (${i.tam})</div>`).join('') : '';
+        const estiloStatus = obterEstiloStatus(p.status);
+
         div.innerHTML += `
         <div class="item-list">
             <div class="item-header">
-                <div><span class="status-badge">${p.status}</span><br><b>${p.cliente}</b></div>
+                <div><span class="status-badge" style="${estiloStatus}">${p.status}</span><br><b>${p.cliente}</b></div>
                 <div style="display:flex; gap:5px">
                    <button class="btn-edit" onclick="document.getElementById('edit-anot-${id}').style.display='block'"><i class="fas fa-edit"></i></button>
                    <button class="btn-del" onclick="if(confirm('Excluir?')) db.ref('anotacoes_pedidos/${id}').remove()">🗑️</button>
@@ -350,7 +376,7 @@ function salvarEdicaoAnotacao(id, vGasto) {
         vVenda: novaVenda,
         vLucro: novoLucro
     }).then(() => {
-        alert("Dados do cliente atualizados!");
+        alert("Dados do cliente updated!");
         document.getElementById('edit-anot-' + id).style.display = 'none';
     });
 }
