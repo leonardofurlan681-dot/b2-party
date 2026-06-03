@@ -44,6 +44,14 @@
         small { color: #888; text-transform: uppercase; font-size: 0.65rem; }
 
         .prod-img-preview { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #444; }
+
+        /* Estilos adicionais para os blocos da calculadora */
+        .metrics-grid { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+        .metric-card { flex: 1; min-width: 140px; background: #000; border: 1px solid #333; padding: 15px; border-radius: 8px; text-align: center; }
+        .metric-title { font-size: 0.6rem; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .metric-value { font-size: 1.1rem; font-weight: bold; }
+        .resumo-mes-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #222; font-size: 0.8rem; }
+        .resumo-mes-item:last-child { border-bottom: none; }
     </style>
 </head>
 <body>
@@ -57,6 +65,7 @@
         <div class="tab-btn active" onclick="openTab('vendas-site')">PEDIDOS DO SITE</div>
         <div class="tab-btn" onclick="openTab('anotacoes')">ANOTAÇÕES MANUAIS</div>
         <div class="tab-btn" onclick="openTab('gerenciamento')">SITE & CUPONS</div>
+        <div class="tab-btn" onclick="openTab('financeiro')">FINANCEIRO</div>
     </div>
 
     <div id="vendas-site" class="tab-content active">
@@ -168,6 +177,30 @@
                 <button onclick="addProduto()">CADASTRAR PRODUTO</button>
             </div>
             <div id="lista-produtos"></div>
+        </div>
+    </div>
+
+    <div id="financeiro" class="tab-content">
+        <div class="card">
+            <h2><i class="fas fa-calculator"></i> Calculadora de Lucros</h2>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-title">Lucro desta Semana</div>
+                    <div class="metric-value" id="lucro-semana" style="color: #00ff00;">R$ 0,00</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Lucro do Mês Atual</div>
+                    <div class="metric-value" id="lucro-mes" style="color: #00ff00;">R$ 0,00</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2><i class="fas fa-history"></i> Resumo Mensal Histórico</h2>
+            <div id="lista-resumo-mensal" style="background: #000; border-radius: 8px; border: 1px solid #333; padding: 10px;">
+                <div style="font-size: 0.75rem; color: #888; text-align: center; padding: 10px;">Nenhum registro encontrado.</div>
+            </div>
         </div>
     </div>
 
@@ -354,11 +387,70 @@ function salvarPedidoCompleto() {
 db.ref('anotacoes_pedidos').on('value', snap => {
     const div = document.getElementById('lista-anotacoes');
     div.innerHTML = "";
+    
+    // Variáveis auxiliares para cálculos financeiros internos
+    let lucroSemanaTotal = 0;
+    let lucroMesTotal = 0;
+    let resumoMensalMap = {};
+
+    const agora = new Date();
+    
+    // Obter limites da semana atual (segunda a domingo)
+    const atualDiaSemana = agora.getDay(); 
+    const distanciaSegunda = atualDiaSemana === 0 ? -6 : 1 - atualDiaSemana;
+    const segundaFeira = new Date(agora);
+    segundaFeira.setDate(agora.getDate() + distanciaSegunda);
+    segundaFeira.setHours(0,0,0,0);
+    
+    const domingoData = new Date(segundaFeira);
+    domingoData.setDate(segundaFeira.getDate() + 6);
+    domingoData.setHours(23,59,59,999);
+
+    const mesAtualStr = String(agora.getMonth() + 1).padStart(2, '0');
+    const anoAtualStr = String(agora.getFullYear());
+
     snap.forEach(item => {
         const p = item.val();
         const id = item.key;
         let prodHtml = p.itens ? p.itens.map(i => `<div style="font-size:0.75rem">• ${i.qtd}x ${i.nome} (${i.tam})</div>`).join('') : '';
         const estiloStatus = obterEstiloStatus(p.status);
+
+        // --- LÓGICA DO PROCESSAMENTO FINANCEIRO ---
+        if(p.vLucro) {
+            const valorLucroNum = parseFloat(p.vLucro.replace('.', '').replace(',', '.'));
+            
+            // Tenta converter string de data (Formatos comuns pt-BR: dd/mm/aaaa hh:mm:ss ou similares)
+            if(p.data) {
+                const partesData = p.data.split('/');
+                if(partesData.length >= 3) {
+                    const diaP = parseInt(partesData[0]);
+                    const mesP = parseInt(partesData[1]);
+                    const anoCompletoP = partesData[2].split(' ');
+                    const anoP = parseInt(anoCompletoP[0]);
+                    
+                    const dataPedido = new Date(anoP, mesP - 1, diaP);
+                    
+                    // Chave do mês para o agrupamento histórico (Ex: "05/2026")
+                    const mesChave = `${String(mesP).padStart(2, '0')}/${anoP}`;
+                    if(!resumoMensalMap[mesChave]) {
+                        resumoMensalMap[mesChave] = { faturamento: 0, lucro: 0 };
+                    }
+                    
+                    const valorVendaNum = p.vVenda ? parseFloat(p.vVenda.replace('.', '').replace(',', '.')) : 0;
+                    resumoMensalMap[mesChave].faturamento += valorVendaNum;
+                    resumoMensalMap[mesChave].lucro += valorLucroNum;
+
+                    // Somar na Semana Atual
+                    if(dataPedido >= segundaFeira && dataPedido <= domingoData) {
+                        lucroSemanaTotal += valorLucroNum;
+                    }
+                    // Somar no Mês Atual
+                    if(String(mesP).padStart(2, '0') === mesAtualStr && String(anoP) === anoAtualStr) {
+                        lucroMesTotal += valorLucroNum;
+                    }
+                }
+            }
+        }
 
         div.innerHTML += `
         <div class="item-list">
@@ -398,6 +490,33 @@ db.ref('anotacoes_pedidos').on('value', snap => {
             </div>
         </div>`;
     });
+
+    // --- ATUALIZAÇÃO DA ABA FINANCEIRO EM TEMPO REAL ---
+    document.getElementById('lucro-semana').innerText = `R$ ${lucroSemanaTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    document.getElementById('lucro-mes').innerText = `R$ ${lucroMesTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+    const divResumo = document.getElementById('lista-resumo-mensal');
+    const chavesOrdenadas = Object.keys(resumoMensalMap).sort((a,b) => {
+        const [mesA, anoA] = a.split('/').map(Number);
+        const [mesB, anoB] = b.split('/').map(Number);
+        return anoB !== anoA ? anoB - anoA : mesB - mesA; // Ordena do mês mais recente para o mais antigo
+    });
+
+    if(chavesOrdenadas.length > 0) {
+        divResumo.innerHTML = "";
+        chavesOrdenadas.forEach(mesChave => {
+            const faturamentoStr = resumoMensalMap[mesChave].faturamento.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            const lucroStr = resumoMensalMap[mesChave].lucro.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            divResumo.innerHTML += `
+                <div class="resumo-mes-item">
+                    <span><b>${mesChave}</b></span>
+                    <span>Fat: <span style="color: #aaa;">R$ ${faturamentoStr}</span> | Lucro: <span style="color: #00ff00; font-weight: bold;">R$ ${lucroStr}</span></span>
+                </div>
+            `;
+        });
+    } else {
+        divResumo.innerHTML = `<div style="font-size: 0.75rem; color: #888; text-align: center; padding: 10px;">Nenhum registro encontrado.</div>`;
+    }
 });
 
 function salvarEdicaoAnotacao(id, vGasto) {
@@ -412,7 +531,7 @@ function salvarEdicaoAnotacao(id, vGasto) {
         vVenda: novaVenda,
         vLucro: novoLucro
     }).then(() => {
-        alert("Dados do cliente atualizados!");
+        alert("Dados do cliente updated!");
         document.getElementById('edit-anot-' + id).style.display = 'none';
     });
 }
