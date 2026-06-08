@@ -19,8 +19,23 @@
         }
         .tab-btn.active { background: linear-gradient(180deg, #dcdcdc, #999999); color: #000; border: none; }
 
+        /* Sub-Abas de Status de Pedidos */
+        .sub-tabs-pedidos { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 15px; flex-wrap: wrap; }
+        .sub-tab-btn {
+            background: #0d0d0d; color: #666; border: 1px solid #222; padding: 8px 14px;
+            border-radius: 6px; cursor: pointer; font-size: 0.65rem; font-weight: bold; letter-spacing: 0.5px;
+            transition: 0.2s;
+        }
+        .sub-tab-btn.active { background: #fff; color: #000; border-color: #fff; }
+        .sub-tab-btn.active.tab-pendente { background: #ff4d4d; color: #fff; border-color: #ff4d4d; }
+        .sub-tab-btn.active.tab-preparando { background: #ffaa00; color: #000; border-color: #ffaa00; }
+        .sub-tab-btn.active.tab-enviado { background: #00bfff; color: #fff; border-color: #00bfff; }
+        .sub-tab-btn.active.tab-entregue { background: #00ff00; color: #000; border-color: #00ff00; }
+
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+        .status-container { display: none; }
+        .status-container.active { display: block; }
 
         .card { background: #121212; border: 1px solid #444; padding: 20px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         h2 { font-size: 0.8rem; letter-spacing: 2px; color: #aaa; margin-bottom: 20px; text-transform: uppercase; }
@@ -45,7 +60,6 @@
 
         .prod-img-preview { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #444; }
 
-        /* Estilos adicionais para os blocos da calculadora */
         .metrics-grid { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
         .metric-card { flex: 1; min-width: 140px; background: #000; border: 1px solid #333; padding: 15px; border-radius: 8px; text-align: center; }
         .metric-title { font-size: 0.6rem; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
@@ -71,7 +85,26 @@
     <div id="vendas-site" class="tab-content active">
         <div class="card">
             <h2><i class="fas fa-shopping-cart"></i> Pedidos Realizados no Site</h2>
-            <div id="lista-pedidos-site">Carregando pedidos...</div>
+            
+            <div class="sub-tabs-pedidos">
+                <div class="sub-tab-btn active tab-pendente" onclick="mudarSubStatus('status-pendente')">PENDENTES (<span id="count-pendente">0</span>)</div>
+                <div class="sub-tab-btn tab-preparando" onclick="mudarSubStatus('status-preparando')">PREPARANDO (<span id="count-preparando">0</span>)</div>
+                <div class="sub-tab-btn tab-enviado" onclick="mudarSubStatus('status-enviado')">ENVIADOS (<span id="count-enviado">0</span>)</div>
+                <div class="sub-tab-btn tab-entregue" onclick="mudarSubStatus('status-entregue')">ENTREGUES (<span id="count-entregues">0</span>)</div>
+            </div>
+
+            <div id="status-pendente" class="status-container active">
+                <div id="lista-pedidos-pendente">Carregando pendentes...</div>
+            </div>
+            <div id="status-preparando" class="status-container">
+                <div id="lista-pedidos-preparando">Carregando em preparação...</div>
+            </div>
+            <div id="status-enviado" class="status-container">
+                <div id="lista-pedidos-enviado">Carregando enviados...</div>
+            </div>
+            <div id="status-entregue" class="status-container">
+                <div id="lista-pedidos-entregue">Carregando entregues...</div>
+            </div>
         </div>
     </div>
 
@@ -86,6 +119,8 @@
                 <div style="display: flex; gap: 10px;">
                     <select id="temp-tipo" onchange="atualizarTamanhos()" style="flex:1">
                         <option value="tenis">Tênis</option>
+                        <option value="moletom">Moletom</option>
+                        <option value="academia">Academia</option>
                         <option value="camisas">Camisas</option>
                         <option value="conjuntos">Conjuntos</option>
                         <option value="shorts">Shorts</option>
@@ -112,6 +147,7 @@
             <select id="ped-status">
                 <option value="pendente">Status: Pendente</option>
                 <option value="preparando">Status: Preparando</option>
+                <option value="enviado">Status: Enviado</option>
                 <option value="entregue">Status: Entregue</option>
             </select>
             <button onclick="salvarPedidoCompleto()">FINALIZAR E SALVAR ANOTAÇÃO</button>
@@ -130,6 +166,8 @@
                     <option value="tenis">Tênis Masculino</option>
                     <option value="tenis-feminino">Tênis Feminino</option>
                     <option value="chinelos">Chinelos</option>
+                    <option value="moletom">Moletom</option>
+                    <option value="academia">Academia</option>
                     <option value="raul">Raul</option>
                     <option value="camisas">Camisas</option>
                     <option value="conjuntos">Conjuntos</option>
@@ -159,6 +197,8 @@
                     <option value="tenis">Tênis Masculino</option>
                     <option value="tenis-feminino">Tênis Feminino</option>
                     <option value="chinelos">Chinelos</option>
+                    <option value="moletom">Moletom</option>
+                    <option value="academia">Academia</option>
                     <option value="raul">Raul</option>
                     <option value="camisas">Camisas</option>
                     <option value="conjuntos">Conjuntos</option>
@@ -183,7 +223,6 @@
     <div id="financeiro" class="tab-content">
         <div class="card">
             <h2><i class="fas fa-calculator"></i> Calculadora de Lucros</h2>
-            
             <div class="metrics-grid">
                 <div class="metric-card">
                     <div class="metric-title">Lucro desta Semana</div>
@@ -220,10 +259,19 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
+// --- OPERAÇÕES DO NAVEGADOR (TABS) ---
 function openTab(tabId) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
+    if(window.event && window.event.currentTarget) window.event.currentTarget.classList.add('active');
+}
+
+function mudarSubStatus(containerId) {
+    document.querySelectorAll('.status-container').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
+    
+    document.getElementById(containerId).classList.add('active');
     if(window.event && window.event.currentTarget) window.event.currentTarget.classList.add('active');
 }
 
@@ -239,26 +287,22 @@ function atualizarTamanhos() {
 }
 atualizarTamanhos();
 
-// --- FUNÇÃO PARA SALVAR SIMULTANEAMENTE NO ADM E NO CLIENTE ---
+// --- ATUALIZAÇÃO SINCRO DO STATUS/RASTREIO NO SITE ---
 function atualizarPedidoNoFirebase(idPedido, novosDados) {
-    // 1. Atualiza na lista global do ADM
-    firebase.database().ref('todos_pedidos/' + idPedido).update(novosDados);
+    db.ref('todos_pedidos/' + idPedido).update(novosDados);
 
-    // 2. Busca quem é o dono do pedido para atualizar a seção dele
-    firebase.database().ref('todos_pedidos/' + idPedido).once('value', snap => {
+    db.ref('todos_pedidos/' + idPedido).once('value', snap => {
         if (snap.exists()) {
             const dadosPedidoCompleto = snap.val();
-            // Verifica os possíveis caminhos onde o ID do cliente pode estar guardado
             const uidCliente = dadosPedidoCompleto.uid || dadosPedidoCompleto.userId || dadosPedidoCompleto.clienteId;
             
             if (uidCliente) {
-                firebase.database().ref('pedidos/' + uidCliente + '/' + idPedido).update(novosDados);
+                db.ref('pedidos/' + uidCliente + '/' + idPedido).update(novosDados);
             } else {
-                // Se o ID direto não estiver explícito, fazemos uma varredura segura para achar a conta do cliente
-                firebase.database().ref('pedidos').once('value', usuariosSnap => {
+                db.ref('pedidos').once('value', usuariosSnap => {
                     usuariosSnap.forEach(usuarioChild => {
                         if (usuarioChild.hasChild(idPedido)) {
-                            firebase.database().ref('pedidos/' + usuarioChild.key + '/' + idPedido).update(novosDados);
+                            db.ref('pedidos/' + usuarioChild.key + '/' + idPedido).update(novosDados);
                         }
                     });
                 });
@@ -266,6 +310,106 @@ function atualizarPedidoNoFirebase(idPedido, novosDados) {
         }
     });
 }
+
+function obterEstiloStatus(status) {
+    const st = String(status).toLowerCase();
+    if (st === 'entregue') return 'background-color: #00ff00; color: #000;';
+    if (st === 'preparando') return 'background-color: #ffaa00; color: #000;';
+    if (st === 'enviado') return 'background-color: #00bfff; color: #fff;';
+    return 'background: #ff4d4d; color: #fff;';
+}
+
+// --- PEDIDOS DO SITE (FILTRADOS E DISTRIBUÍDOS) ---
+db.ref('todos_pedidos').on('value', snap => {
+    const divPendente = document.getElementById('lista-pedidos-pendente');
+    const divPreparando = document.getElementById('lista-pedidos-preparando');
+    const divEnviado = document.getElementById('lista-pedidos-enviado');
+    const divEntregue = document.getElementById('lista-pedidos-entregue');
+    
+    divPendente.innerHTML = "";
+    divPreparando.innerHTML = "";
+    divEnviado.innerHTML = "";
+    divEntregue.innerHTML = "";
+
+    let cPendente = 0, cPreparando = 0, cEnviado = 0, cEntregue = 0;
+    const avisoVazio = `<div style="font-size:0.75rem; color:#666; padding:15px; text-align:center;">Nenhum pedido neste status.</div>`;
+    
+    if (!snap.exists()) {
+        divPendente.innerHTML = avisoVazio; divPreparando.innerHTML = avisoVazio;
+        divEnviado.innerHTML = avisoVazio; divEntregue.innerHTML = avisoVazio;
+        document.getElementById('count-pendente').innerText = "0";
+        document.getElementById('count-preparando').innerText = "0";
+        document.getElementById('count-enviado').innerText = "0";
+        document.getElementById('count-entregues').innerText = "0";
+        return;
+    }
+
+    snap.forEach(child => {
+        const p = child.val();
+        const id = child.key;
+        let totalLimpo = p.total ? p.total.toString().toLowerCase().replace(/total:/g, '').trim() : '0,00';
+        
+        const statusAtual = p.status || 'Pendente';
+        const statusFormatado = statusAtual.toLowerCase();
+        const estiloStatus = obterEstiloStatus(statusAtual);
+        
+        const dataExibida = p.data || 'Data indisponível';
+        const emailExibido = p.email || p.userEmail || 'Não informado';
+        
+        const cardHtml = `
+            <div class="item-list" style="border-left: 4px solid ${statusFormatado === 'entregue' ? '#00ff00' : statusFormatado === 'preparando' ? '#ffaa00' : statusFormatado === 'enviado' ? '#00bfff' : '#ff4d4d'}">
+                <div class="item-header">
+                    <div>
+                        <span class="status-badge" style="${estiloStatus}">${statusAtual}</span>
+                        <div style="margin-top: 5px; font-size: 0.85rem;"><b>${p.cliente || 'Sem Nome'}</b></div>
+                        <div style="font-size: 0.65rem; color: #888; margin-top: 2px;"><i class="fas fa-envelope"></i> ${emailExibido}</div>
+                    </div>
+                    <button class="btn-del" onclick="if(confirm('Excluir este pedido?')) { db.ref('todos_pedidos/${id}').remove(); db.ref('pedidos').once('value', u => { u.forEach(uc => { if(uc.hasChild('${id}')) db.ref('pedidos/' + uc.key + '/${id}').remove(); })}); }">🗑️ EXCLUIR</button>
+                </div>
+                
+                <div style="font-size: 0.65rem; background: #1a1a1a; padding: 4px 8px; border-radius: 4px; display: inline-block; color: #aaa; margin-bottom: 8px;">
+                    <i class="far fa-clock"></i> Realizado em: ${dataExibida}
+                </div>
+
+                <div style="font-size:0.75rem; color:#aaa; margin-bottom:10px; background: #111; padding: 10px; border-radius: 5px;">
+                    <b>ENTREGA:</b><br>
+                    CEP: ${p.cep || '---'} | WhatsApp: ${p.whatsapp || '---'}<br>
+                    End: ${p.endereco || '---'}<br>
+                    CPF: ${p.cpf || '---'}
+                </div>
+                <div style="margin:10px 0; background:#111; padding:8px; border-radius:4px;">
+                    ${p.produtos ? p.produtos.map(i => `• ${i.nome} (${i.tamanho || '---'})`).join('<br>') : 'Sem itens'}
+                    <div style="margin-top:5px; color:#dcdcdc; font-weight:bold">Total: R$ ${totalLimpo}</div>
+                </div>
+                <input type="text" id="rastreio-${id}" placeholder="Código de Rastreio" value="${p.rastreio || ''}" style="margin-bottom:5px; padding:8px; font-size:0.7rem;">
+                <div style="display:flex; gap:5px">
+                    <button onclick="atualizarPedidoNoFirebase('${id}', {rastreio: document.getElementById('rastreio-${id}').value}); alert('Rastreio Salvo!')" style="padding:8px; font-size:0.6rem; flex:1">SALVAR RASTREIO</button>
+                    <select onchange="if(this.value) { atualizarPedidoNoFirebase('${id}', {status: this.value}); alert('Status alterado!') }" style="flex:1; padding:8px; font-size:0.6rem; margin:0">
+                        <option value="">Alterar Status...</option>
+                        <option value="Pendente" ${statusAtual === 'Pendente' ? 'selected' : ''}>Pendente</option>
+                        <option value="Preparando" ${statusAtual === 'Preparando' ? 'selected' : ''}>Preparando</option>
+                        <option value="Enviado" ${statusAtual === 'Enviado' ? 'selected' : ''}>Enviado</option>
+                        <option value="Entregue" ${statusAtual === 'Entregue' ? 'selected' : ''}>Entregue</option>
+                    </select>
+                </div>
+            </div>`;
+
+        if (statusFormatado === 'preparando') { divPreparando.innerHTML += cardHtml; cPreparando++; }
+        else if (statusFormatado === 'enviado') { divEnviado.innerHTML += cardHtml; cEnviado++; }
+        else if (statusFormatado === 'entregue') { divEntregue.innerHTML += cardHtml; cEntregue++; }
+        else { divPendente.innerHTML += cardHtml; cPendente++; }
+    });
+
+    document.getElementById('count-pendente').innerText = cPendente;
+    document.getElementById('count-preparando').innerText = cPreparando;
+    document.getElementById('count-enviado').innerText = cEnviado;
+    document.getElementById('count-entregues').innerText = cEntregue;
+
+    if (cPendente === 0) divPendente.innerHTML = avisoVazio;
+    if (cPreparando === 0) divPreparando.innerHTML = avisoVazio;
+    if (cEnviado === 0) divEnviado.innerHTML = avisoVazio;
+    if (cEntregue === 0) divEntregue.innerHTML = avisoVazio;
+});
 
 // --- SISTEMA DE CUPONS ---
 function addCupom() {
@@ -296,55 +440,7 @@ db.ref('cupons').on('value', snap => {
     });
 });
 
-function obterEstiloStatus(status) {
-    const st = String(status).toLowerCase();
-    if (st === 'entregue') return 'background-color: #00ff00; color: #000;';
-    if (st === 'preparando' || st === 'enviado') return 'background-color: #ffff00; color: #000;';
-    return 'background: #999; color: #000;';
-}
-
-// --- PEDIDOS DO SITE (ATUALIZAÇÃO DE STATUS E RASTREIO CORRIGIDA) ---
-db.ref('todos_pedidos').on('value', snap => {
-    const div = document.getElementById('lista-pedidos-site');
-    div.innerHTML = "";
-    snap.forEach(child => {
-        const p = child.val();
-        const id = child.key;
-        let totalLimpo = p.total ? p.total.toString().toLowerCase().replace(/total:/g, '').trim() : '0,00';
-        const estiloStatus = obterEstiloStatus(p.status || 'Pendente');
-        
-        div.innerHTML += `
-            <div class="item-list" style="border-left: 4px solid #999">
-                <div class="item-header">
-                    <div><span class="status-badge" style="${estiloStatus}">${p.status || 'Pendente'}</span><br><b>${p.cliente || 'Sem Nome'}</b></div>
-                    <button class="btn-del" onclick="if(confirm('Excluir este pedido de todos os registros?')) { firebase.database().ref('todos_pedidos/${id}').remove(); firebase.database().ref('pedidos').once('value', u => { u.forEach(uc => { if(uc.hasChild('${id}')) firebase.database().ref('pedidos/' + uc.key + '/${id}').remove(); })}); }">🗑️ EXCLUIR</button>
-                </div>
-                <div style="font-size:0.75rem; color:#aaa; margin-bottom:10px; background: #111; padding: 10px; border-radius: 5px;">
-                    <b>ENTREGA:</b><br>
-                    CEP: ${p.cep || '---'} | WhatsApp: ${p.whatsapp || '---'}<br>
-                    End: ${p.endereco || '---'}<br>
-                    CPF: ${p.cpf || '---'}
-                </div>
-                <div style="margin:10px 0; background:#111; padding:8px; border-radius:4px;">
-                    ${p.produtos ? p.produtos.map(i => `• ${i.nome} (${i.tamanho || '---'})`).join('<br>') : 'Sem itens'}
-                    <div style="margin-top:5px; color:#dcdcdc; font-weight:bold">Total: R$ ${totalLimpo}</div>
-                </div>
-                <input type="text" id="rastreio-${id}" placeholder="Código de Rastreio" value="${p.rastreio || ''}" style="margin-bottom:5px; padding:8px; font-size:0.7rem;">
-                <div style="display:flex; gap:5px">
-                    <button onclick="atualizarPedidoNoFirebase('${id}', {rastreio: document.getElementById('rastreio-${id}').value}); alert('Rastreio Salvo para o cliente!')" style="padding:8px; font-size:0.6rem; flex:1">SALVAR RASTREIO</button>
-                    <select onchange="if(this.value) { atualizarPedidoNoFirebase('${id}', {status: this.value}); alert('Status alterado!') }" style="flex:1; padding:8px; font-size:0.6rem; margin:0">
-                        <option value="">Alterar Status...</option>
-                        <option value="Pendente" ${p.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
-                        <option value="Preparando" ${p.status === 'Preparando' ? 'selected' : ''}>Preparando</option>
-                        <option value="Enviado" ${p.status === 'Enviado' ? 'selected' : ''}>Enviado</option>
-                        <option value="Entregue" ${p.status === 'Entregue' ? 'selected' : ''}>Entregue</option>
-                    </select>
-                </div>
-            </div>`;
-    });
-});
-
-// --- ANOTAÇÕES MANUAIS ---
+// --- ANOTAÇÕES MANUAIS & FINANCEIRO ---
 let itensDoPedido = [];
 function adicionarItemNaLista() {
     const nome = document.getElementById('temp-nome').value;
@@ -388,66 +484,61 @@ db.ref('anotacoes_pedidos').on('value', snap => {
     const div = document.getElementById('lista-anotacoes');
     div.innerHTML = "";
     
-    // Variáveis auxiliares para cálculos financeiros internos
-    let lucroSemanaTotal = 0;
-    let lucroMesTotal = 0;
-    let resumoMensalMap = {};
-
+    let lucroSemanaTotal = 0; let lucroMesTotal = 0; let resumoMensalMap = {};
     const agora = new Date();
     
-    // Obter limites da semana atual (segunda a domingo)
     const atualDiaSemana = agora.getDay(); 
     const distanciaSegunda = atualDiaSemana === 0 ? -6 : 1 - atualDiaSemana;
     const segundaFeira = new Date(agora);
-    segundaFeira.setDate(agora.getDate() + distanciaSegunda);
-    segundaFeira.setHours(0,0,0,0);
+    segundaFeira.setDate(agora.getDate() + distanciaSegunda); segundaFeira.setHours(0,0,0,0);
     
     const domingoData = new Date(segundaFeira);
-    domingoData.setDate(segundaFeira.getDate() + 6);
-    domingoData.setHours(23,59,59,999);
+    domingoData.setDate(segundaFeira.getDate() + 6); domingoData.setHours(23,59,59,999);
 
     const mesAtualStr = String(agora.getMonth() + 1).padStart(2, '0');
     const anoAtualStr = String(agora.getFullYear());
 
+    if(!snap.exists()) {
+        document.getElementById('lucro-semana').innerText = "R$ 0,00";
+        document.getElementById('lucro-mes').innerText = "R$ 0,00";
+        document.getElementById('lista-resumo-mensal').innerHTML = `<div style="font-size: 0.75rem; color: #888; text-align: center; padding: 10px;">Nenhum registro encontrado.</div>`;
+        return;
+    }
+
     snap.forEach(item => {
         const p = item.val();
         const id = item.key;
-        let prodHtml = p.itens ? p.itens.map(i => `<div style="font-size:0.75rem">• ${i.qtd}x ${i.nome} (${i.tam})</div>`).join('') : '';
-        const estiloStatus = obterEstiloStatus(p.status);
+        
+        let prodHtml = 'Sem itens';
+        if (p.itens) {
+            if (Array.isArray(p.itens)) {
+                prodHtml = p.itens.map(i => `<div style="font-size:0.75rem">• ${i.qtd || 1}x ${i.nome || 'Item'} (${i.tam || '---'})</div>`).join('');
+            } else if (typeof p.itens === 'object') {
+                prodHtml = Object.values(p.itens).map(i => `<div style="font-size:0.75rem">• ${i.qtd || 1}x ${i.nome || 'Item'} (${i.tam || '---'})</div>`).join('');
+            }
+        }
+        
+        const estiloStatus = obterEstiloStatus(p.status || 'pendente');
 
-        // --- LÓGICA DO PROCESSAMENTO FINANCEIRO ---
         if(p.vLucro) {
-            const valorLucroNum = parseFloat(p.vLucro.replace('.', '').replace(',', '.'));
-            
-            // Tenta converter string de data (Formatos comuns pt-BR: dd/mm/aaaa hh:mm:ss ou similares)
+            const valorLucroNum = parseFloat(p.vLucro.toString().replace(/\./g, '').replace(',', '.'));
             if(p.data) {
                 const partesData = p.data.split('/');
                 if(partesData.length >= 3) {
-                    const diaP = parseInt(partesData[0]);
-                    const mesP = parseInt(partesData[1]);
-                    const anoCompletoP = partesData[2].split(' ');
-                    const anoP = parseInt(anoCompletoP[0]);
+                    const diaP = parseInt(partesData[0]); const mesP = parseInt(partesData[1]);
+                    const anoCompletoP = partesData[2].split(' '); const anoP = parseInt(anoCompletoP[0]);
                     
                     const dataPedido = new Date(anoP, mesP - 1, diaP);
-                    
-                    // Chave do mês para o agrupamento histórico (Ex: "05/2026")
                     const mesChave = `${String(mesP).padStart(2, '0')}/${anoP}`;
-                    if(!resumoMensalMap[mesChave]) {
-                        resumoMensalMap[mesChave] = { faturamento: 0, lucro: 0 };
-                    }
                     
-                    const valorVendaNum = p.vVenda ? parseFloat(p.vVenda.replace('.', '').replace(',', '.')) : 0;
+                    if(!resumoMensalMap[mesChave]) resumoMensalMap[mesChave] = { faturamento: 0, lucro: 0 };
+                    
+                    const valorVendaNum = p.vVenda ? parseFloat(p.vVenda.toString().replace(/\./g, '').replace(',', '.')) : 0;
                     resumoMensalMap[mesChave].faturamento += valorVendaNum;
                     resumoMensalMap[mesChave].lucro += valorLucroNum;
 
-                    // Somar na Semana Atual
-                    if(dataPedido >= segundaFeira && dataPedido <= domingoData) {
-                        lucroSemanaTotal += valorLucroNum;
-                    }
-                    // Somar no Mês Atual
-                    if(String(mesP).padStart(2, '0') === mesAtualStr && String(anoP) === anoAtualStr) {
-                        lucroMesTotal += valorLucroNum;
-                    }
+                    if(dataPedido >= segundaFeira && dataPedido <= domingoData) lucroSemanaTotal += valorLucroNum;
+                    if(String(mesP).padStart(2, '0') === mesAtualStr && String(anoP) === anoAtualStr) lucroMesTotal += valorLucroNum;
                 }
             }
         }
@@ -455,32 +546,32 @@ db.ref('anotacoes_pedidos').on('value', snap => {
         div.innerHTML += `
         <div class="item-list">
             <div class="item-header">
-                <div><span class="status-badge" style="${estiloStatus}">${p.status}</span><br><b>${p.cliente}</b></div>
+                <div><span class="status-badge" style="${estiloStatus}">${p.status || 'pendente'}</span><br><b>${p.cliente || 'Sem Nome'}</b></div>
                 <div style="display:flex; gap:5px">
                    <button class="btn-edit" onclick="document.getElementById('edit-anot-${id}').style.display='block'"><i class="fas fa-edit"></i></button>
-                   <button class="btn-del" onclick="if(confirm('Excluir?')) db.ref('anotacoes_pedidos/${id}').remove()">🗑️</button>
+                   <button class="btn-del" onclick="if(confirm('Excluir anotação?')) db.ref('anotacoes_pedidos/${id}').remove()">🗑️</button>
                 </div>
             </div>
             <div style="margin:10px 0;">${prodHtml}</div>
             
             <div id="edit-anot-${id}" style="display:none; background:#1a1a1a; padding:10px; border-radius:8px; margin-bottom:10px;">
                 <label style="font-size:0.6rem; color:#888;">NOME DO CLIENTE:</label>
-                <input type="text" id="edit-cli-nome-${id}" value="${p.cliente}" style="padding:8px; font-size:0.7rem;">
+                <input type="text" id="edit-cli-nome-${id}" value="${p.cliente || ''}" style="padding:8px; font-size:0.7rem;">
                 <label style="font-size:0.6rem; color:#888;">VALOR DA VENDA (R$):</label>
-                <input type="text" id="edit-cli-venda-${id}" value="${p.vVenda}" style="padding:8px; font-size:0.7rem;">
-                <button class="btn-save" onclick="salvarEdicaoAnotacao('${id}', '${p.vGasto}')">SALVAR ALTERAÇÕES</button>
+                <input type="text" id="edit-cli-venda-${id}" value="${p.vVenda || '0,00'}" style="padding:8px; font-size:0.7rem;">
+                <button class="btn-save" onclick="salvarEdicaoAnotacao('${id}', '${p.vGasto || '0,00'}')">SALVAR ALTERAÇÕES</button>
             </div>
 
             <div class="finance-info">
-                <div style="flex:1"><small>Venda:</small><br>R$ ${p.vVenda}</div>
-                <div style="flex:1"><small>Lucro:</small><br><span class="lucro-text">R$ ${p.vLucro}</span></div>
+                <div style="flex:1"><small>Venda:</small><br>R$ ${p.vVenda || '0,00'}</div>
+                <div style="flex:1"><small>Lucro:</small><br><span class="lucro-text">R$ ${p.vLucro || '0,00'}</span></div>
             </div>
             
             <div style="margin-top:15px;">
                 <input type="text" id="rastreio-anot-${id}" placeholder="Código de Rastreio" value="${p.rastreio || ''}" style="margin-bottom:5px; padding:8px; font-size:0.7rem;">
                 <div style="display:flex; gap:5px">
-                    <button onclick="firebase.database().ref('anotacoes_pedidos/${id}').update({rastreio: document.getElementById('rastreio-anot-${id}').value}); alert('Rastreio Manual Atualizado!')" style="padding:8px; font-size:0.6rem; flex:1">SALVAR RASTREIO</button>
-                    <select onchange="firebase.database().ref('anotacoes_pedidos/${id}').update({status: this.value})" style="flex:1; padding:8px; font-size:0.6rem; margin:0">
+                    <button onclick="db.ref('anotacoes_pedidos/${id}').update({rastreio: document.getElementById('rastreio-anot-${id}').value}); alert('Rastreio Manual Atualizado!')" style="padding:8px; font-size:0.6rem; flex:1">SALVAR RASTREIO</button>
+                    <select onchange="db.ref('anotacoes_pedidos/${id}').update({status: this.value})" style="flex:1; padding:8px; font-size:0.6rem; margin:0">
                         <option value="">Alterar Status...</option>
                         <option value="pendente" ${p.status === 'pendente' ? 'selected' : ''}>Pendente</option>
                         <option value="preparando" ${p.status === 'preparando' ? 'selected' : ''}>Preparando</option>
@@ -491,15 +582,13 @@ db.ref('anotacoes_pedidos').on('value', snap => {
         </div>`;
     });
 
-    // --- ATUALIZAÇÃO DA ABA FINANCEIRO EM TEMPO REAL ---
     document.getElementById('lucro-semana').innerText = `R$ ${lucroSemanaTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     document.getElementById('lucro-mes').innerText = `R$ ${lucroMesTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
     const divResumo = document.getElementById('lista-resumo-mensal');
     const chavesOrdenadas = Object.keys(resumoMensalMap).sort((a,b) => {
-        const [mesA, anoA] = a.split('/').map(Number);
-        const [mesB, anoB] = b.split('/').map(Number);
-        return anoB !== anoA ? anoB - anoA : mesB - mesA; // Ordena do mês mais recente para o mais antigo
+        const [mesA, anoA] = a.split('/').map(Number); const [mesB, anoB] = b.split('/').map(Number);
+        return anoB !== anoA ? anoB - anoA : mesB - mesA;
     });
 
     if(chavesOrdenadas.length > 0) {
@@ -511,8 +600,7 @@ db.ref('anotacoes_pedidos').on('value', snap => {
                 <div class="resumo-mes-item">
                     <span><b>${mesChave}</b></span>
                     <span>Fat: <span style="color: #aaa;">R$ ${faturamentoStr}</span> | Lucro: <span style="color: #00ff00; font-weight: bold;">R$ ${lucroStr}</span></span>
-                </div>
-            `;
+                </div>`;
         });
     } else {
         divResumo.innerHTML = `<div style="font-size: 0.75rem; color: #888; text-align: center; padding: 10px;">Nenhum registro encontrado.</div>`;
@@ -522,28 +610,26 @@ db.ref('anotacoes_pedidos').on('value', snap => {
 function salvarEdicaoAnotacao(id, vGasto) {
     const novoNome = document.getElementById('edit-cli-nome-' + id).value;
     const novaVenda = document.getElementById('edit-cli-venda-' + id).value;
-    const vendaNum = parseFloat(novaVenda.replace(',','.'));
-    const gastoNum = parseFloat(vGasto.replace(',','.'));
+    const vendaNum = parseFloat(novaVenda.toString().replace(/\./g, '').replace(',', '.'));
+    const gastoNum = parseFloat(vGasto.toString().replace(/\./g, '').replace(',', '.'));
     const novoLucro = (vendaNum - gastoNum).toFixed(2).replace('.',',');
 
-    db.ref('anotacoes_pedidos/' + id).update({
-        cliente: novoNome,
-        vVenda: novaVenda,
-        vLucro: novoLucro
-    }).then(() => {
-        alert("Dados do cliente updated!");
+    db.ref('anotacoes_pedidos/' + id).update({ cliente: novoNome, vVenda: novaVenda, vLucro: novoLucro }).then(() => {
+        alert("Dados atualizados!");
         document.getElementById('edit-anot-' + id).style.display = 'none';
     });
 }
 
-// --- SITE (BANNERS E PRODUTOS COM SUPORTE A TAGS) ---
+// --- BANNER & PRODUTOS ---
 function addBanner() {
     const url = document.getElementById('b-url').value;
     if(url) db.ref('banners').push({ url }).then(() => { document.getElementById('b-url').value = ""; });
 }
 db.ref('banners').on('value', snap => {
     const div = document.getElementById('lista-banners'); div.innerHTML = "";
-    snap.forEach(c => { div.innerHTML += `<div class="item-list" style="display:flex; justify-content:space-between; align-items:center;"><img src="${c.val().url}" height="40"> <button class="btn-del" onclick="db.ref('banners/${c.key}').remove()">X</button></div>`; });
+    if(snap.exists()){
+        snap.forEach(c => { div.innerHTML += `<div class="item-list" style="display:flex; justify-content:space-between; align-items:center;"><img src="${c.val().url}" height="40" style="max-width:70%; object-fit:contain;"> <button class="btn-del" onclick="db.ref('banners/${c.key}').remove()">X</button></div>`; });
+    }
 });
 
 function addProduto() {
@@ -552,62 +638,53 @@ function addProduto() {
     const cat = document.getElementById('p-cat').value;
     const tag = document.getElementById('p-tag').value;
     const img = document.getElementById('p-img').value;
-    if(nome && preco) db.ref('produtos').push({ nome, preco, categoria: cat, tag: tag, imagem: img }).then(() => { 
-        alert("Produto cadastrado!"); 
-        document.getElementById('p-nome').value = "";
-        document.getElementById('p-preco').value = "";
-        document.getElementById('p-img').value = "";
+    if(!nome || !preco) return alert("Nome e Preço são obrigatórios!");
+    db.ref('produtos').push({ nome, preco, categoria: cat, tag: tag, imagem: img }).then(() => { 
+        alert("Produto cadastrado!"); document.getElementById('p-nome').value = ""; document.getElementById('p-preco').value = ""; document.getElementById('p-img').value = "";
     });
 }
 
 db.ref('produtos').on('value', snap => {
     const div = document.getElementById('lista-produtos'); div.innerHTML = "";
+    if(!snap.exists()) return;
     snap.forEach(c => {
-        const prod = c.val();
-        const id = c.key;
-        const tagAtual = prod.tag || 'nenhuma';
-        const catAtual = prod.categoria || 'tenis';
-        
+        const prod = c.val(); const id = c.key; const tagAtual = prod.tag || 'nenhuma'; const catAtual = prod.categoria || 'tenis';
         div.innerHTML += `
         <div class="item-list">
             <div style="display:flex; gap:10px; align-items:center;">
-                <img src="${prod.imagem}" class="prod-img-preview" onerror="this.src='https://via.placeholder.com/50'">
+                <img src="${prod.imagem || ''}" class="prod-img-preview" onerror="this.src='https://via.placeholder.com/50'">
                 <div style="flex:1">
-                    <b>${prod.nome}</b><br>
-                    R$ ${prod.preco} <span style="font-size:0.65rem; color:#888;">(${catAtual.toUpperCase()})</span><br>
+                    <b>${prod.nome || 'Sem Nome'}</b><br>
+                    R$ ${prod.preco || '0,00'} <span style="font-size:0.65rem; color:#888;">(${catAtual.toUpperCase()})</span><br>
                     <span style="font-size:0.65rem; font-weight:bold; color:${tagAtual === 'mais-pedido' ? '#00ff00' : tagAtual === 'esgotado' ? '#ff3333' : '#888'}">TAG: ${tagAtual.toUpperCase()}</span>
                 </div>
                 <div style="display:flex; gap:5px;">
                     <button class="btn-edit" onclick="document.getElementById('edit-box-${id}').style.display='block'"><i class="fas fa-edit"></i></button>
-                    <button class="btn-del" onclick="if(confirm('Excluir?')) db.ref('produtos/${id}').remove()">🗑</button>
+                    <button class="btn-del" onclick="if(confirm('Excluir produto?')) db.ref('produtos/${id}').remove()">🗑</button>
                 </div>
             </div>
             <div id="edit-box-${id}" style="display:none; margin-top:10px; border-top:1px solid #333; padding-top:10px;">
-                <label style="font-size:0.6rem; color:#888;">NOME:</label>
-                <input type="text" id="edit-nome-${id}" value="${prod.nome}" style="padding:8px;">
-                
-                <label style="font-size:0.6rem; color:#888;">PREÇO:</label>
-                <input type="text" id="edit-preco-${id}" value="${prod.preco}" style="padding:8px;">
-                
+                <label style="font-size:0.6rem; color:#888;">NOME:</label><input type="text" id="edit-nome-${id}" value="${prod.nome || ''}">
+                <label style="font-size:0.6rem; color:#888;">PREÇO:</label><input type="text" id="edit-preco-${id}" value="${prod.preco || ''}">
                 <label style="font-size:0.6rem; color:#888;">CATEGORIA:</label>
                 <select id="edit-cat-${id}">
                     <option value="tenis" ${catAtual === 'tenis' ? 'selected' : ''}>Tênis Masculino</option>
                     <option value="tenis-feminino" ${catAtual === 'tenis-feminino' ? 'selected' : ''}>Tênis Feminino</option>
                     <option value="chinelos" ${catAtual === 'chinelos' ? 'selected' : ''}>Chinelos</option>
-                    <option value="raul" ${catAtual === 'raul' ? 'selected' : ''}>Raul</option>
+                    <option value="moletom" ${catAtual === 'moletom' ? 'selected' : ''}>Moletom</option>
+                    <option value="academia" ${catAtual === 'academia' ? 'selected' : ''}>Academia</option>
                     <option value="camisas" ${catAtual === 'camisas' ? 'selected' : ''}>Camisas</option>
                     <option value="conjuntos" ${catAtual === 'conjuntos' ? 'selected' : ''}>Conjuntos</option>
                     <option value="shorts" ${catAtual === 'shorts' ? 'selected' : ''}>Shorts</option>
                     <option value="joias" ${catAtual === 'joias' ? 'selected' : ''}>Joias</option>
+                    <option value="raul" ${catAtual === 'raul' ? 'selected' : ''}>Raul</option>
                 </select>
-
                 <label style="font-size:0.6rem; color:#888;">TAG:</label>
                 <select id="edit-tag-${id}">
                     <option value="nenhuma" ${tagAtual === 'nenhuma' ? 'selected' : ''}>Nenhuma Tag</option>
                     <option value="mais-pedido" ${tagAtual === 'mais-pedido' ? 'selected' : ''}>Mais Pedido</option>
                     <option value="esgotado" ${tagAtual === 'esgotado' ? 'selected' : ''}>Esgotado</option>
                 </select>
-                
                 <button class="btn-save" onclick="salvarEdicao('${id}')">SALVAR ALTERAÇÕES</button>
             </div>
         </div>`;
@@ -619,10 +696,8 @@ function salvarEdicao(id) {
     const preco = document.getElementById('edit-preco-' + id).value;
     const categoria = document.getElementById('edit-cat-' + id).value;
     const tag = document.getElementById('edit-tag-' + id).value;
-    
     db.ref('produtos/' + id).update({ nome, preco, categoria, tag }).then(() => {
-        alert("Atualizado com sucesso!");
-        document.getElementById('edit-box-' + id).style.display='none';
+        alert("Atualizado!"); document.getElementById('edit-box-' + id).style.display='none';
     });
 }
 </script>
