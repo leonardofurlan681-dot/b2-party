@@ -70,6 +70,14 @@
 </head>
 <body>
 
+    <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel Administrativo Premium</title>
+</head>
+<body>
+
     <div class="header-adm">
         <img src="logo.png" class="logo-adm">
         <p style="font-size: 0.7rem; color: #aaa; margin-top: 10px; letter-spacing: 2px;">PAINEL DE CONTROLE PREMIUM</p>
@@ -355,6 +363,17 @@ db.ref('todos_pedidos').on('value', snap => {
         
         const dataExibida = p.data || 'Data indisponível';
         const emailExibido = p.email || p.userEmail || 'Não informado';
+
+        // --- SISTEMA INTELIGENTE DE EXIBIÇÃO DE ENDEREÇO (CONDOMÍNIO / CASA) ---
+        let htmlLogisticaResidencia = '';
+        if (p.tipoResidencia === 'condominio') {
+            htmlLogisticaResidencia = `🏢 <b>Condomínio:</b> Bloco ${p.bloco || '---'} | Apt/Sala: ${p.apartamento || '---'}`;
+        } else if (p.tipoResidencia === 'casa') {
+            htmlLogisticaResidencia = `🏡 <b>Residência:</b> Casa`;
+        } else {
+            // Suporte/Fallback para pedidos legados que não possuíam o seletor estruturado
+            htmlLogisticaResidencia = `📍 <b>Tipo:</b> Não especificado`;
+        }
         
         const cardHtml = `
             <div class="item-list" style="border-left: 4px solid ${statusFormatado === 'entregue' ? '#00ff00' : statusFormatado === 'preparando' ? '#ffaa00' : statusFormatado === 'enviado' ? '#00bfff' : '#ff4d4d'}">
@@ -371,10 +390,11 @@ db.ref('todos_pedidos').on('value', snap => {
                     <i class="far fa-clock"></i> Realizado em: ${dataExibida}
                 </div>
 
-                <div style="font-size:0.75rem; color:#aaa; margin-bottom:10px; background: #111; padding: 10px; border-radius: 5px;">
+                <div style="font-size:0.75rem; color:#aaa; margin-bottom:10px; background: #111; padding: 10px; border-radius: 5px; line-height: 1.4;">
                     <b>ENTREGA:</b><br>
                     CEP: ${p.cep || '---'} | WhatsApp: ${p.whatsapp || '---'}<br>
-                    End: ${p.endereco || '---'}<br>
+                    End: ${p.endereco || '---'}${p.numero ? ', Nº ' + p.numero : ''}<br>
+                    ${htmlLogisticaResidencia}<br>
                     CPF: ${p.cpf || '---'}
                 </div>
                 <div style="margin:10px 0; background:#111; padding:8px; border-radius:4px;">
@@ -480,6 +500,7 @@ function salvarPedidoCompleto() {
     });
 }
 
+// --- RENDERS DE ANOTAÇÕES & CÁLCULOS TOTAIS ---
 db.ref('anotacoes_pedidos').on('value', snap => {
     const div = document.getElementById('lista-anotacoes');
     div.innerHTML = "";
@@ -615,7 +636,7 @@ function salvarEdicaoAnotacao(id, vGasto) {
     const novoLucro = (vendaNum - gastoNum).toFixed(2).replace('.',',');
 
     db.ref('anotacoes_pedidos/' + id).update({ cliente: novoNome, vVenda: novaVenda, vLucro: novoLucro }).then(() => {
-        alert("Dados atualizados!");
+        alert("Dados updated!");
         document.getElementById('edit-anot-' + id).style.display = 'none';
     });
 }
