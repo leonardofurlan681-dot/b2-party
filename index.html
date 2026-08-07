@@ -1,92 +1,287 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
+    <meta charset="UTF-8">
     <title>ADM | B2 STREET</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        * { box-sizing: border-box; }
-        body { background: #050505; color: #fff; font-family: 'Segoe UI', sans-serif; padding: 20px; }
-        .header-adm { text-align: center; margin-bottom: 30px; }
-        .logo-adm { width: 120px; filter: drop-shadow(0 0 10px rgba(200,200,200,0.3)); }
+        * { box-sizing: border-box; border-radius: 0 !important; }
+        body { 
+            background: #08080a; 
+            color: #e0e0e0; 
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif; 
+            padding: 20px; 
+            margin: 0;
+        }
         
-        /* Estética Silver Metallic */
-        .nav-tabs { display: flex; gap: 10px; margin-bottom: 25px; justify-content: center; flex-wrap: wrap; }
+        .header-adm { 
+            text-align: center; 
+            margin-bottom: 30px; 
+            border-bottom: 1px solid #2a2a2e;
+            padding-bottom: 20px;
+        }
+        .logo-adm { 
+            width: 130px; 
+            filter: drop-shadow(0 0 12px rgba(220, 220, 220, 0.25)); 
+        }
+        
+        /* Navegação Principal em Estilo Prata Metálico */
+        .nav-tabs { 
+            display: flex; 
+            gap: 8px; 
+            margin-bottom: 25px; 
+            justify-content: center; 
+            flex-wrap: wrap; 
+        }
         .tab-btn { 
-            background: #111; color: #888; border: 1px solid #333; padding: 12px 20px; 
-            border-radius: 8px; cursor: pointer; font-size: 0.7rem; font-weight: bold; letter-spacing: 1px;
-            transition: 0.3s;
+            background: #111115; 
+            color: #8a8a8a; 
+            border: 1px solid #2a2a30; 
+            padding: 12px 22px; 
+            cursor: pointer; 
+            font-size: 0.7rem; 
+            font-weight: 800; 
+            letter-spacing: 1.5px;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
         }
-        .tab-btn.active { background: linear-gradient(180deg, #dcdcdc, #999999); color: #000; border: none; }
+        .tab-btn:hover {
+            color: #ffffff;
+            border-color: #666666;
+            background: #18181c;
+        }
+        .tab-btn.active { 
+            background: linear-gradient(135deg, #ffffff 0%, #a6a6a6 50%, #5e5e5e 100%); 
+            color: #000000; 
+            border: 1px solid #ffffff; 
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+        }
 
-        /* Sub-Abas de Status de Pedidos */
-        .sub-tabs-pedidos { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 15px; flex-wrap: wrap; }
-        .sub-tab-btn {
-            background: #0d0d0d; color: #666; border: 1px solid #222; padding: 8px 14px;
-            border-radius: 6px; cursor: pointer; font-size: 0.65rem; font-weight: bold; letter-spacing: 0.5px;
-            transition: 0.2s;
+        /* Sub-Abas de Status de Pedidos (Estilo Futurista Limpo) */
+        .sub-tabs-pedidos { 
+            display: flex; 
+            gap: 6px; 
+            margin-bottom: 20px; 
+            border-bottom: 1px solid #222226; 
+            padding-bottom: 15px; 
+            flex-wrap: wrap; 
         }
-        .sub-tab-btn.active { background: #fff; color: #000; border-color: #fff; }
-        .sub-tab-btn.active.tab-pendente { background: #ff4d4d; color: #fff; border-color: #ff4d4d; }
-        .sub-tab-btn.active.tab-preparando { background: #ffaa00; color: #000; border-color: #ffaa00; }
-        .sub-tab-btn.active.tab-enviado { background: #00bfff; color: #fff; border-color: #00bfff; }
-        .sub-tab-btn.active.tab-entregue { background: #00ff00; color: #000; border-color: #00ff00; }
+        .sub-tab-btn {
+            background: #0c0c0e; 
+            color: #777777; 
+            border: 1px solid #222226; 
+            padding: 8px 16px;
+            cursor: pointer; 
+            font-size: 0.65rem; 
+            font-weight: 700; 
+            letter-spacing: 1px;
+            transition: all 0.2s ease;
+        }
+        .sub-tab-btn:hover {
+            border-color: #555555;
+            color: #cccccc;
+        }
+        .sub-tab-btn.active { 
+            background: #dcdcdc; 
+            color: #000000; 
+            border-color: #ffffff; 
+            font-weight: 900;
+        }
+        .sub-tab-btn.active.tab-pendente { 
+            background: linear-gradient(135deg, #e6e6e6, #888888); 
+            color: #000; 
+            border-color: #ffffff; 
+        }
+        .sub-tab-btn.active.tab-preparando { 
+            background: linear-gradient(135deg, #cccccc, #666666); 
+            color: #000; 
+            border-color: #ffffff; 
+        }
+        .sub-tab-btn.active.tab-enviado { 
+            background: linear-gradient(135deg, #b8b8b8, #555555); 
+            color: #000; 
+            border-color: #ffffff; 
+        }
+        .sub-tab-btn.active.tab-entregue { 
+            background: linear-gradient(135deg, #ffffff, #999999); 
+            color: #000; 
+            border-color: #ffffff; 
+        }
 
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         .status-container { display: none; }
         .status-container.active { display: block; }
 
-        .card { background: #121212; border: 1px solid #444; padding: 20px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        h2 { font-size: 0.8rem; letter-spacing: 2px; color: #aaa; margin-bottom: 20px; text-transform: uppercase; }
+        /* Estrutura de Cards Angulares */
+        .card { 
+            background: #101014; 
+            border: 1px solid #282830; 
+            padding: 22px; 
+            margin-bottom: 25px; 
+            box-shadow: 0 6px 20px rgba(0,0,0,0.6); 
+            position: relative;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, #ffffff, #444444);
+        }
         
-        input, select { width: 100%; padding: 12px; margin-bottom: 15px; background: #000; border: 1px solid #333; color: #fff; border-radius: 6px; outline: none; font-family: inherit; }
-        button { width: 100%; padding: 15px; background: linear-gradient(180deg, #dcdcdc, #999999); color: #000; border: none; border-radius: 6px; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
-        button:hover { opacity: 0.8; }
+        h2 { 
+            font-size: 0.8rem; 
+            letter-spacing: 2px; 
+            color: #cccccc; 
+            margin-top: 0;
+            margin-bottom: 20px; 
+            text-transform: uppercase; 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
         
-        .item-list { background: #0a0a0a; padding: 15px; border-radius: 6px; margin-bottom: 10px; font-size: 0.8rem; border: 1px solid #444; }
+        input, select { 
+            width: 100%; 
+            padding: 12px 14px; 
+            margin-bottom: 15px; 
+            background: #050507; 
+            border: 1px solid #2a2a30; 
+            color: #ffffff; 
+            outline: none; 
+            font-family: inherit; 
+            font-size: 0.8rem;
+            transition: border-color 0.2s ease;
+        }
+        input:focus, select:focus {
+            border-color: #888888;
+        }
+
+        button { 
+            width: 100%; 
+            padding: 14px; 
+            background: linear-gradient(135deg, #ffffff 0%, #aaaaaa 50%, #666666 100%); 
+            color: #000000; 
+            border: none; 
+            font-weight: 800; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            transition: all 0.2s ease; 
+            font-size: 0.75rem;
+        }
+        button:hover { 
+            background: linear-gradient(135deg, #ffffff 0%, #cccccc 100%);
+            box-shadow: 0 0 10px rgba(255,255,255,0.2);
+        }
+        
+        .item-list { 
+            background: #08080a; 
+            padding: 16px; 
+            margin-bottom: 12px; 
+            font-size: 0.8rem; 
+            border: 1px solid #222228; 
+            transition: border-color 0.2s ease;
+        }
+        .item-list:hover {
+            border-color: #44444e;
+        }
         .item-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
         
-        .btn-del { background: #444 !important; color: #fff !important; width: auto !important; padding: 5px 10px !important; font-size: 0.7rem !important; }
-        .btn-edit { background: #dcdcdc !important; color: #000 !important; width: auto !important; padding: 5px 10px !important; font-size: 0.7rem !important; }
-        .btn-save { background: #dcdcdc !important; color: #000 !important; width: auto !important; padding: 8px 15px !important; font-size: 0.7rem !important; margin-top: 5px; }
+        .btn-del { background: #282830 !important; color: #ff6b6b !important; border: 1px solid #3d3d4a !important; width: auto !important; padding: 6px 12px !important; font-size: 0.65rem !important; }
+        .btn-del:hover { background: #ff3333 !important; color: #000 !important; }
+        .btn-edit { background: #dcdcdc !important; color: #000000 !important; width: auto !important; padding: 6px 12px !important; font-size: 0.65rem !important; }
+        .btn-save { background: linear-gradient(135deg, #ffffff, #999999) !important; color: #000000 !important; width: auto !important; padding: 8px 16px !important; font-size: 0.7rem !important; margin-top: 8px; }
         
-        .status-badge { padding: 3px 8px; border-radius: 4px; font-size: 0.6rem; font-weight: bold; text-transform: uppercase; display: inline-block; color: #000; background: #999; }
+        .status-badge { 
+            padding: 4px 10px; 
+            font-size: 0.6rem; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            display: inline-block; 
+            color: #000000; 
+            background: #cccccc; 
+            letter-spacing: 1px;
+        }
         
-        .temp-item { background: #1a1a1a; padding: 8px; border-radius: 5px; margin-bottom: 5px; font-size: 0.75rem; border-left: 3px solid #999; display: flex; justify-content: space-between; }
-        .finance-info { display: flex; gap: 10px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #333; }
-        .lucro-text { color: #00ff00; font-weight: bold; }
-        small { color: #888; text-transform: uppercase; font-size: 0.65rem; }
+        .temp-item { 
+            background: #121216; 
+            padding: 10px; 
+            margin-bottom: 6px; 
+            font-size: 0.75rem; 
+            border-left: 2px solid #aaaaaa; 
+            display: flex; 
+            justify-content: space-between; 
+            border-top: 1px solid #1a1a20;
+            border-right: 1px solid #1a1a20;
+            border-bottom: 1px solid #1a1a20;
+        }
+        .finance-info { display: flex; gap: 10px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #282830; }
+        .lucro-text { color: #ffffff; font-weight: bold; text-shadow: 0 0 5px rgba(255,255,255,0.3); }
+        small { color: #777777; text-transform: uppercase; font-size: 0.62rem; letter-spacing: 0.5px; }
 
-        .prod-img-preview { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #444; }
+        .prod-img-preview { width: 50px; height: 50px; object-fit: cover; border: 1px solid #33333d; }
 
         .metrics-grid { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
-        .metric-card { flex: 1; min-width: 140px; background: #000; border: 1px solid #333; padding: 15px; border-radius: 8px; text-align: center; }
-        .metric-title { font-size: 0.6rem; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
-        .metric-value { font-size: 1.1rem; font-weight: bold; }
-        .resumo-mes-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #222; font-size: 0.8rem; }
+        .metric-card { 
+            flex: 1; 
+            min-width: 140px; 
+            background: #060608; 
+            border: 1px solid #222228; 
+            padding: 16px; 
+            text-align: center; 
+        }
+        .metric-title { font-size: 0.6rem; color: #777777; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
+        .metric-value { font-size: 1.2rem; font-weight: 800; color: #ffffff; }
+        
+        .resumo-mes-item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #18181c; font-size: 0.8rem; }
         .resumo-mes-item:last-child { border-bottom: none; }
+
+        /* Funil de Eventos Metálico */
+        .funnel-container { background: #060608; border: 1px solid #222228; padding: 15px; margin-top: 15px; }
+        .funnel-stage { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #141418; font-size: 0.75rem; }
+        .funnel-stage:last-child { border-bottom: none; }
+        .funnel-label { display: flex; align-items: center; gap: 10px; color: #aaaaaa; }
+        .funnel-label i { width: 16px; text-align: center; color: #ffffff; }
+        .funnel-count { font-weight: 800; color: #ffffff; }
+
+        /* Caixas de Busca de Produtos */
+        .search-box {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-size: 0.8rem;
+        }
+        .search-box input {
+            padding-left: 35px;
+            margin-bottom: 0;
+            border-color: #33333d;
+            background: #08080a;
+        }
     </style>
 </head>
 <body>
 
-    <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>Painel Administrativo Premium</title>
-</head>
-<body>
-
     <div class="header-adm">
-        <img src="logo.png" class="logo-adm">
-        <p style="font-size: 0.7rem; color: #aaa; margin-top: 10px; letter-spacing: 2px;">PAINEL DE CONTROLE PREMIUM</p>
+        <img src="logo.png" class="logo-adm" alt="Logo ADM">
+        <p style="font-size: 0.7rem; color: #888888; margin-top: 12px; letter-spacing: 3px; font-weight: 700;">PAINEL DE CONTROLE PREMIUM</p>
     </div>
 
     <div class="nav-tabs">
         <div class="tab-btn active" onclick="openTab('vendas-site')">PEDIDOS DO SITE</div>
         <div class="tab-btn" onclick="openTab('anotacoes')">ANOTAÇÕES MANUAIS</div>
         <div class="tab-btn" onclick="openTab('gerenciamento')">SITE & CUPONS</div>
+        <div class="tab-btn" onclick="openTab('metricas')">MÉTRICAS (PIXEL)</div>
         <div class="tab-btn" onclick="openTab('financeiro')">FINANCEIRO</div>
     </div>
 
@@ -121,8 +316,8 @@
             <h2><i class="fas fa-user"></i> CRIAR ANOTAÇÃO MANUAL</h2>
             <input type="text" id="ped-cliente" placeholder="Nome do Cliente">
             
-            <div style="background: #000; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 15px;">
-                <h3 style="font-size: 0.65rem; color: #888; margin-bottom: 10px;">ADICIONAR PRODUTOS:</h3>
+            <div style="background: #060608; padding: 16px; border: 1px solid #222228; margin-bottom: 15px;">
+                <h3 style="font-size: 0.65rem; color: #888888; margin-bottom: 12px; letter-spacing: 1px; text-transform: uppercase;">ADICIONAR PRODUTOS:</h3>
                 <input type="text" id="temp-nome" placeholder="Produto (Ex: Jordan 4)">
                 <div style="display: flex; gap: 10px;">
                     <select id="temp-tipo" onchange="atualizarTamanhos()" style="flex:1">
@@ -137,17 +332,17 @@
                     <input type="text" id="temp-preco-item" placeholder="Preço Un. (R$)" style="flex:1">
                     <input type="number" id="temp-qtd" value="1" min="1" style="flex:0.5">
                 </div>
-                <button onclick="adicionarItemNaLista()" style="background: #333; color: #fff; padding: 10px; font-size: 0.7rem; margin-top: 10px;">+ ADICIONAR ITEM AO PEDIDO</button>
+                <button onclick="adicionarItemNaLista()" style="background: #222228; color: #ffffff; padding: 12px; font-size: 0.7rem; margin-top: 5px; border: 1px solid #33333d;">+ ADICIONAR ITEM AO PEDIDO</button>
                 <div id="carrinho-temporario" style="margin-top: 15px;"></div>
             </div>
 
             <div style="display: flex; gap: 10px;">
                 <div style="flex:1">
-                    <label style="font-size: 0.6rem; color: #888;">VALOR TOTAL VENDA (R$):</label>
+                    <label style="font-size: 0.6rem; color: #888888; display: block; margin-bottom: 4px;">VALOR TOTAL VENDA (R$):</label>
                     <input type="text" id="ped-valor-site" placeholder="Ex: 500,00">
                 </div>
                 <div style="flex:1">
-                    <label style="font-size: 0.6rem; color: #888;">VALOR QUE EU GASTO (R$):</label>
+                    <label style="font-size: 0.6rem; color: #888888; display: block; margin-bottom: 4px;">VALOR QUE EU GASTO (R$):</label>
                     <input type="text" id="ped-valor-gasto" placeholder="Ex: 250,00">
                 </div>
             </div>
@@ -166,7 +361,7 @@
     <div id="gerenciamento" class="tab-content">
         <div class="card">
             <h2><i class="fas fa-ticket-alt"></i> SISTEMA DE CUPONS</h2>
-            <div style="background: #000; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 15px;">
+            <div style="background: #060608; padding: 16px; border: 1px solid #222228; margin-bottom: 15px;">
                 <input type="text" id="cupom-nome" placeholder="NOME DO CUPOM (Ex: B2STREET10)">
                 <input type="number" id="cupom-desconto" placeholder="DESCONTO EM R$ (Apenas números)">
                 <select id="cupom-tipo-valido">
@@ -196,11 +391,11 @@
 
         <div class="card">
             <h2><i class="fas fa-box"></i> GERENCIAR PRODUTOS DO SITE</h2>
-            <div style="background: #000; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 20px;">
+            <div style="background: #060608; padding: 16px; border: 1px solid #222228; margin-bottom: 20px;">
                 <input type="text" id="p-nome" placeholder="Nome do Produto">
                 <input type="text" id="p-preco" placeholder="Preço (Ex: 199,90)">
                 
-                <label style="font-size: 0.65rem; color: #888;">CATEGORIA:</label>
+                <label style="font-size: 0.65rem; color: #888888; display: block; margin-bottom: 4px;">CATEGORIA:</label>
                 <select id="p-cat">
                     <option value="tenis">Tênis Masculino</option>
                     <option value="tenis-feminino">Tênis Feminino</option>
@@ -214,17 +409,60 @@
                     <option value="joias">Joias</option>
                 </select>
 
-                <label style="font-size: 0.65rem; color: #888;">TAG DO PRODUTO:</label>
+                <label style="font-size: 0.65rem; color: #888888; display: block; margin-bottom: 4px;">TAG DO PRODUTO:</label>
                 <select id="p-tag">
                     <option value="nenhuma">Nenhuma Tag</option>
-                    <option value="mais-pedido">Mais Pedido (Verde)</option>
-                    <option value="esgotado">Esgotado (Vermelho)</option>
+                    <option value="mais-pedido">Mais Pedido (Prata Destaque)</option>
+                    <option value="esgotado">Esgotado (Cinza Escuro)</option>
                 </select>
 
                 <input type="text" id="p-img" placeholder="Link da Imagem">
                 <button onclick="addProduto()">CADASTRAR PRODUTO</button>
             </div>
+
+            <!-- NOVA FERRAMENTA DE BUSCA INTEGRAÇÃO DE PRODUTOS -->
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="busca-produtos" placeholder="Buscar produtos cadastrados..." onkeyup="filtrarProdutos()">
+            </div>
+
             <div id="lista-produtos"></div>
+        </div>
+    </div>
+
+    <div id="metricas" class="tab-content">
+        <div class="card">
+            <h2><i class="fas fa-chart-line"></i> Funil de Eventos do Site (Pixel)</h2>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-title">Visitas Totais</div>
+                    <div class="metric-value" id="pixel-visitas">0</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Cliques no WhatsApp</div>
+                    <div class="metric-value" id="pixel-whatsapp">0</div>
+                </div>
+            </div>
+
+            <div class="funnel-container">
+                <div class="funnel-stage">
+                    <div class="funnel-label"><i class="fas fa-eye"></i> 1. Visualizações (ViewContent)</div>
+                    <div class="funnel-count" id="pixel-viewcontent">0</div>
+                </div>
+                <div class="funnel-stage">
+                    <div class="funnel-label"><i class="fas fa-shopping-bag"></i> 2. Carrinho (AddToCart)</div>
+                    <div class="funnel-count" id="pixel-addtocart">0</div>
+                </div>
+                <div class="funnel-stage">
+                    <div class="funnel-label"><i class="fas fa-money-check-alt"></i> 3. Checkout (InitiateCheckout)</div>
+                    <div class="funnel-count" id="pixel-checkout">0</div>
+                </div>
+                <div class="funnel-stage">
+                    <div class="funnel-label"><i class="fas fa-check-circle"></i> 4. Compras (Purchase)</div>
+                    <div class="funnel-count" id="pixel-purchase">0</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -234,19 +472,19 @@
             <div class="metrics-grid">
                 <div class="metric-card">
                     <div class="metric-title">Lucro desta Semana</div>
-                    <div class="metric-value" id="lucro-semana" style="color: #00ff00;">R$ 0,00</div>
+                    <div class="metric-value" id="lucro-semana" style="color: #ffffff;">R$ 0,00</div>
                 </div>
                 <div class="metric-card">
                     <div class="metric-title">Lucro do Mês Atual</div>
-                    <div class="metric-value" id="lucro-mes" style="color: #00ff00;">R$ 0,00</div>
+                    <div class="metric-value" id="lucro-mes" style="color: #ffffff;">R$ 0,00</div>
                 </div>
             </div>
         </div>
 
         <div class="card">
             <h2><i class="fas fa-history"></i> Resumo Mensal Histórico</h2>
-            <div id="lista-resumo-mensal" style="background: #000; border-radius: 8px; border: 1px solid #333; padding: 10px;">
-                <div style="font-size: 0.75rem; color: #888; text-align: center; padding: 10px;">Nenhum registro encontrado.</div>
+            <div id="lista-resumo-mensal" style="background: #060608; border: 1px solid #222228; padding: 10px;">
+                <div style="font-size: 0.75rem; color: #777777; text-align: center; padding: 10px;">Nenhum registro encontrado.</div>
             </div>
         </div>
     </div>
@@ -266,6 +504,19 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+
+// --- ATUALIZAÇÃO EM TEMPO REAL DAS MÉTRICAS (PIXEL) ---
+db.ref('pixel_metrics').on('value', snap => {
+    if (snap.exists()) {
+        const dados = snap.val();
+        document.getElementById('pixel-visitas').innerText = dados.visitas || 0;
+        document.getElementById('pixel-whatsapp').innerText = dados.whatsapp || 0;
+        document.getElementById('pixel-viewcontent').innerText = dados.ViewContent || 0;
+        document.getElementById('pixel-addtocart').innerText = dados.AddToCart || 0;
+        document.getElementById('pixel-checkout').innerText = dados.InitiateCheckout || 0;
+        document.getElementById('pixel-purchase').innerText = dados.Purchase || 0;
+    }
+});
 
 // --- OPERAÇÕES DO NAVEGADOR (TABS) ---
 function openTab(tabId) {
@@ -321,10 +572,10 @@ function atualizarPedidoNoFirebase(idPedido, novosDados) {
 
 function obterEstiloStatus(status) {
     const st = String(status).toLowerCase();
-    if (st === 'entregue') return 'background-color: #00ff00; color: #000;';
-    if (st === 'preparando') return 'background-color: #ffaa00; color: #000;';
-    if (st === 'enviado') return 'background-color: #00bfff; color: #fff;';
-    return 'background: #ff4d4d; color: #fff;';
+    if (st === 'entregue') return 'background-color: #ffffff; color: #000;';
+    if (st === 'preparando') return 'background-color: #aaaaaa; color: #000;';
+    if (st === 'enviado') return 'background-color: #888888; color: #fff;';
+    return 'background: #555555; color: #fff;';
 }
 
 // --- PEDIDOS DO SITE (FILTRADOS E DISTRIBUÍDOS) ---
@@ -340,7 +591,7 @@ db.ref('todos_pedidos').on('value', snap => {
     divEntregue.innerHTML = "";
 
     let cPendente = 0, cPreparando = 0, cEnviado = 0, cEntregue = 0;
-    const avisoVazio = `<div style="font-size:0.75rem; color:#666; padding:15px; text-align:center;">Nenhum pedido neste status.</div>`;
+    const avisoVazio = `<div style="font-size:0.75rem; color:#666666; padding:15px; text-align:center;">Nenhum pedido neste status.</div>`;
     
     if (!snap.exists()) {
         divPendente.innerHTML = avisoVazio; divPreparando.innerHTML = avisoVazio;
@@ -364,42 +615,40 @@ db.ref('todos_pedidos').on('value', snap => {
         const dataExibida = p.data || 'Data indisponível';
         const emailExibido = p.email || p.userEmail || 'Não informado';
 
-        // --- SISTEMA INTELIGENTE DE EXIBIÇÃO DE ENDEREÇO (CONDOMÍNIO / CASA) ---
         let htmlLogisticaResidencia = '';
         if (p.tipoResidencia === 'condominio') {
             htmlLogisticaResidencia = `🏢 <b>Condomínio:</b> Bloco ${p.bloco || '---'} | Apt/Sala: ${p.apartamento || '---'}`;
         } else if (p.tipoResidencia === 'casa') {
             htmlLogisticaResidencia = `🏡 <b>Residência:</b> Casa`;
         } else {
-            // Suporte/Fallback para pedidos legados que não possuíam o seletor estruturado
             htmlLogisticaResidencia = `📍 <b>Tipo:</b> Não especificado`;
         }
         
         const cardHtml = `
-            <div class="item-list" style="border-left: 4px solid ${statusFormatado === 'entregue' ? '#00ff00' : statusFormatado === 'preparando' ? '#ffaa00' : statusFormatado === 'enviado' ? '#00bfff' : '#ff4d4d'}">
+            <div class="item-list" style="border-left: 4px solid ${statusFormatado === 'entregue' ? '#ffffff' : statusFormatado === 'preparando' ? '#aaaaaa' : statusFormatado === 'enviado' ? '#777777' : '#444444'}">
                 <div class="item-header">
                     <div>
                         <span class="status-badge" style="${estiloStatus}">${statusAtual}</span>
-                        <div style="margin-top: 5px; font-size: 0.85rem;"><b>${p.cliente || 'Sem Nome'}</b></div>
-                        <div style="font-size: 0.65rem; color: #888; margin-top: 2px;"><i class="fas fa-envelope"></i> ${emailExibido}</div>
+                        <div style="margin-top: 6px; font-size: 0.85rem;"><b>${p.cliente || 'Sem Nome'}</b></div>
+                        <div style="font-size: 0.65rem; color: #888888; margin-top: 2px;"><i class="fas fa-envelope"></i> ${emailExibido}</div>
                     </div>
-                    <button class="btn-del" onclick="if(confirm('Excluir este pedido?')) { db.ref('todos_pedidos/${id}').remove(); db.ref('pedidos').once('value', u => { u.forEach(uc => { if(uc.hasChild('${id}')) db.ref('pedidos/' + uc.key + '/${id}').remove(); })}); }">🗑️ EXCLUIR</button>
+                    <button class="btn-del" onclick="if(confirm('Excluir este pedido?')) { db.ref('todos_pedidos/${id}').remove(); db.ref('pedidos').once('value', u => { u.forEach(uc => { if(uc.hasChild('${id}')) db.ref('pedidos/' + uc.key + '/${id}').remove(); })}); }">EXCLUIR</button>
                 </div>
                 
-                <div style="font-size: 0.65rem; background: #1a1a1a; padding: 4px 8px; border-radius: 4px; display: inline-block; color: #aaa; margin-bottom: 8px;">
+                <div style="font-size: 0.65rem; background: #121216; padding: 4px 8px; border: 1px solid #222228; display: inline-block; color: #aaaaaa; margin-bottom: 8px;">
                     <i class="far fa-clock"></i> Realizado em: ${dataExibida}
                 </div>
 
-                <div style="font-size:0.75rem; color:#aaa; margin-bottom:10px; background: #111; padding: 10px; border-radius: 5px; line-height: 1.4;">
+                <div style="font-size:0.75rem; color:#aaaaaa; margin-bottom:10px; background: #060608; border: 1px solid #1a1a20; padding: 10px; line-height: 1.4;">
                     <b>ENTREGA:</b><br>
                     CEP: ${p.cep || '---'} | WhatsApp: ${p.whatsapp || '---'}<br>
                     End: ${p.endereco || '---'}${p.numero ? ', Nº ' + p.numero : ''}<br>
                     ${htmlLogisticaResidencia}<br>
                     CPF: ${p.cpf || '---'}
                 </div>
-                <div style="margin:10px 0; background:#111; padding:8px; border-radius:4px;">
+                <div style="margin:10px 0; background:#060608; border: 1px solid #1a1a20; padding:8px;">
                     ${p.produtos ? p.produtos.map(i => `• ${i.nome} (${i.tamanho || '---'})`).join('<br>') : 'Sem itens'}
-                    <div style="margin-top:5px; color:#dcdcdc; font-weight:bold">Total: R$ ${totalLimpo}</div>
+                    <div style="margin-top:5px; color:#ffffff; font-weight:bold">Total: R$ ${totalLimpo}</div>
                 </div>
                 <input type="text" id="rastreio-${id}" placeholder="Código de Rastreio" value="${p.rastreio || ''}" style="margin-bottom:5px; padding:8px; font-size:0.7rem;">
                 <div style="display:flex; gap:5px">
@@ -479,7 +728,7 @@ function renderizarCarrinho() {
     const div = document.getElementById('carrinho-temporario');
     div.innerHTML = "";
     itensDoPedido.forEach((item, index) => {
-        div.innerHTML += `<div class="temp-item"><span>${item.qtd}x ${item.nome} (${item.tam})</span><span style="color:red; cursor:pointer" onclick="itensDoPedido.splice(${index}, 1); renderizarCarrinho()">remover</span></div>`;
+        div.innerHTML += `<div class="temp-item"><span>${item.qtd}x ${item.nome} (${item.tam})</span><span style="color:#ff6b6b; cursor:pointer; font-weight:bold;" onclick="itensDoPedido.splice(${index}, 1); renderizarCarrinho()">REMOVER</span></div>`;
     });
 }
 
@@ -522,7 +771,7 @@ db.ref('anotacoes_pedidos').on('value', snap => {
     if(!snap.exists()) {
         document.getElementById('lucro-semana').innerText = "R$ 0,00";
         document.getElementById('lucro-mes').innerText = "R$ 0,00";
-        document.getElementById('lista-resumo-mensal').innerHTML = `<div style="font-size: 0.75rem; color: #888; text-align: center; padding: 10px;">Nenhum registro encontrado.</div>`;
+        document.getElementById('lista-resumo-mensal').innerHTML = `<div style="font-size: 0.75rem; color: #777777; text-align: center; padding: 10px;">Nenhum registro encontrado.</div>`;
         return;
     }
 
@@ -567,7 +816,7 @@ db.ref('anotacoes_pedidos').on('value', snap => {
         div.innerHTML += `
         <div class="item-list">
             <div class="item-header">
-                <div><span class="status-badge" style="${estiloStatus}">${p.status || 'pendente'}</span><br><b>${p.cliente || 'Sem Nome'}</b></div>
+                <div><span class="status-badge" style="${estiloStatus}">${p.status || 'pendente'}</span><br><b style="display:inline-block; margin-top:5px;">${p.cliente || 'Sem Nome'}</b></div>
                 <div style="display:flex; gap:5px">
                    <button class="btn-edit" onclick="document.getElementById('edit-anot-${id}').style.display='block'"><i class="fas fa-edit"></i></button>
                    <button class="btn-del" onclick="if(confirm('Excluir anotação?')) db.ref('anotacoes_pedidos/${id}').remove()">🗑️</button>
@@ -575,10 +824,10 @@ db.ref('anotacoes_pedidos').on('value', snap => {
             </div>
             <div style="margin:10px 0;">${prodHtml}</div>
             
-            <div id="edit-anot-${id}" style="display:none; background:#1a1a1a; padding:10px; border-radius:8px; margin-bottom:10px;">
-                <label style="font-size:0.6rem; color:#888;">NOME DO CLIENTE:</label>
+            <div id="edit-anot-${id}" style="display:none; background:#121216; padding:10px; border:1px solid #2a2a30; margin-bottom:10px;">
+                <label style="font-size:0.6rem; color:#888888;">NOME DO CLIENTE:</label>
                 <input type="text" id="edit-cli-nome-${id}" value="${p.cliente || ''}" style="padding:8px; font-size:0.7rem;">
-                <label style="font-size:0.6rem; color:#888;">VALOR DA VENDA (R$):</label>
+                <label style="font-size:0.6rem; color:#888888;">VALOR DA VENDA (R$):</label>
                 <input type="text" id="edit-cli-venda-${id}" value="${p.vVenda || '0,00'}" style="padding:8px; font-size:0.7rem;">
                 <button class="btn-save" onclick="salvarEdicaoAnotacao('${id}', '${p.vGasto || '0,00'}')">SALVAR ALTERAÇÕES</button>
             </div>
@@ -620,11 +869,11 @@ db.ref('anotacoes_pedidos').on('value', snap => {
             divResumo.innerHTML += `
                 <div class="resumo-mes-item">
                     <span><b>${mesChave}</b></span>
-                    <span>Fat: <span style="color: #aaa;">R$ ${faturamentoStr}</span> | Lucro: <span style="color: #00ff00; font-weight: bold;">R$ ${lucroStr}</span></span>
+                    <span>Fat: <span style="color: #aaaaaa;">R$ ${faturamentoStr}</span> | Lucro: <span style="color: #ffffff; font-weight: bold;">R$ ${lucroStr}</span></span>
                 </div>`;
         });
     } else {
-        divResumo.innerHTML = `<div style="font-size: 0.75rem; color: #888; text-align: center; padding: 10px;">Nenhum registro encontrado.</div>`;
+        divResumo.innerHTML = `<div style="font-size: 0.75rem; color: #777777; text-align: center; padding: 10px;">Nenhum registro encontrado.</div>`;
     }
 });
 
@@ -636,7 +885,7 @@ function salvarEdicaoAnotacao(id, vGasto) {
     const novoLucro = (vendaNum - gastoNum).toFixed(2).replace('.',',');
 
     db.ref('anotacoes_pedidos/' + id).update({ cliente: novoNome, vVenda: novaVenda, vLucro: novoLucro }).then(() => {
-        alert("Dados updated!");
+        alert("Dados atualizados!");
         document.getElementById('edit-anot-' + id).style.display = 'none';
     });
 }
@@ -665,6 +914,21 @@ function addProduto() {
     });
 }
 
+// --- FUNÇÃO DE BUSCA E FILTRAGEM DE PRODUTOS ---
+function filtrarProdutos() {
+    const termo = document.getElementById('busca-produtos').value.toLowerCase();
+    const produtos = document.querySelectorAll('#lista-produtos .item-list');
+    
+    produtos.forEach(prod => {
+        const texto = prod.innerText.toLowerCase();
+        if (texto.includes(termo)) {
+            prod.style.display = "block";
+        } else {
+            prod.style.display = "none";
+        }
+    });
+}
+
 db.ref('produtos').on('value', snap => {
     const div = document.getElementById('lista-produtos'); div.innerHTML = "";
     if(!snap.exists()) return;
@@ -672,22 +936,22 @@ db.ref('produtos').on('value', snap => {
         const prod = c.val(); const id = c.key; const tagAtual = prod.tag || 'nenhuma'; const catAtual = prod.categoria || 'tenis';
         div.innerHTML += `
         <div class="item-list">
-            <div style="display:flex; gap:10px; align-items:center;">
+            <div style="display:flex; gap:12px; align-items:center;">
                 <img src="${prod.imagem || ''}" class="prod-img-preview" onerror="this.src='https://via.placeholder.com/50'">
                 <div style="flex:1">
                     <b>${prod.nome || 'Sem Nome'}</b><br>
-                    R$ ${prod.preco || '0,00'} <span style="font-size:0.65rem; color:#888;">(${catAtual.toUpperCase()})</span><br>
-                    <span style="font-size:0.65rem; font-weight:bold; color:${tagAtual === 'mais-pedido' ? '#00ff00' : tagAtual === 'esgotado' ? '#ff3333' : '#888'}">TAG: ${tagAtual.toUpperCase()}</span>
+                    R$ ${prod.preco || '0,00'} <span style="font-size:0.65rem; color:#888888;">(${catAtual.toUpperCase()})</span><br>
+                    <span style="font-size:0.65rem; font-weight:800; color:${tagAtual === 'mais-pedido' ? '#ffffff' : tagAtual === 'esgotado' ? '#888888' : '#555555'}">TAG: ${tagAtual.toUpperCase()}</span>
                 </div>
                 <div style="display:flex; gap:5px;">
                     <button class="btn-edit" onclick="document.getElementById('edit-box-${id}').style.display='block'"><i class="fas fa-edit"></i></button>
                     <button class="btn-del" onclick="if(confirm('Excluir produto?')) db.ref('produtos/${id}').remove()">🗑</button>
                 </div>
             </div>
-            <div id="edit-box-${id}" style="display:none; margin-top:10px; border-top:1px solid #333; padding-top:10px;">
-                <label style="font-size:0.6rem; color:#888;">NOME:</label><input type="text" id="edit-nome-${id}" value="${prod.nome || ''}">
-                <label style="font-size:0.6rem; color:#888;">PREÇO:</label><input type="text" id="edit-preco-${id}" value="${prod.preco || ''}">
-                <label style="font-size:0.6rem; color:#888;">CATEGORIA:</label>
+            <div id="edit-box-${id}" style="display:none; margin-top:10px; border-top:1px solid #222228; padding-top:10px;">
+                <label style="font-size:0.6rem; color:#888888;">NOME:</label><input type="text" id="edit-nome-${id}" value="${prod.nome || ''}">
+                <label style="font-size:0.6rem; color:#888888;">PREÇO:</label><input type="text" id="edit-preco-${id}" value="${prod.preco || ''}">
+                <label style="font-size:0.6rem; color:#888888;">CATEGORIA:</label>
                 <select id="edit-cat-${id}">
                     <option value="tenis" ${catAtual === 'tenis' ? 'selected' : ''}>Tênis Masculino</option>
                     <option value="tenis-feminino" ${catAtual === 'tenis-feminino' ? 'selected' : ''}>Tênis Feminino</option>
@@ -700,7 +964,7 @@ db.ref('produtos').on('value', snap => {
                     <option value="joias" ${catAtual === 'joias' ? 'selected' : ''}>Joias</option>
                     <option value="raul" ${catAtual === 'raul' ? 'selected' : ''}>Raul</option>
                 </select>
-                <label style="font-size:0.6rem; color:#888;">TAG:</label>
+                <label style="font-size:0.6rem; color:#888888;">TAG:</label>
                 <select id="edit-tag-${id}">
                     <option value="nenhuma" ${tagAtual === 'nenhuma' ? 'selected' : ''}>Nenhuma Tag</option>
                     <option value="mais-pedido" ${tagAtual === 'mais-pedido' ? 'selected' : ''}>Mais Pedido</option>
@@ -710,6 +974,11 @@ db.ref('produtos').on('value', snap => {
             </div>
         </div>`;
     });
+    
+    // Reaplica o filtro caso haja pesquisa ativa enquanto o Firebase atualiza
+    if(document.getElementById('busca-produtos').value !== '') {
+        filtrarProdutos();
+    }
 });
 
 function salvarEdicao(id) {
