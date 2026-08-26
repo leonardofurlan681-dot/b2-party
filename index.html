@@ -416,7 +416,12 @@
                     <option value="esgotado">Esgotado (Cinza Escuro)</option>
                 </select>
 
-                <input type="text" id="p-img" placeholder="Link da Imagem">
+                <label style="font-size: 0.65rem; color: #888888; display: block; margin-top: 10px; margin-bottom: 4px;">IMAGENS DO PRODUTO (ATÉ 5):</label>
+<input type="text" id="p-img1" placeholder="Link da Imagem 1 (Principal)">
+<input type="text" id="p-img2" placeholder="Link da Imagem 2 (Opcional)">
+<input type="text" id="p-img3" placeholder="Link da Imagem 3 (Opcional)">
+<input type="text" id="p-img4" placeholder="Link da Imagem 4 (Opcional)">
+<input type="text" id="p-img5" placeholder="Link da Imagem 5 (Opcional)">
                 <button onclick="addProduto()">CADASTRAR PRODUTO</button>
             </div>
 
@@ -907,13 +912,33 @@ function addProduto() {
     const preco = document.getElementById('p-preco').value;
     const cat = document.getElementById('p-cat').value;
     const tag = document.getElementById('p-tag').value;
-    const img = document.getElementById('p-img').value;
+    
+    // Coleta até 5 imagens e remove campos vazios
+    const imagens = [
+        document.getElementById('p-img1').value.trim(),
+        document.getElementById('p-img2').value.trim(),
+        document.getElementById('p-img3').value.trim(),
+        document.getElementById('p-img4').value.trim(),
+        document.getElementById('p-img5').value.trim()
+    ].filter(url => url !== "");
+
     if(!nome || !preco) return alert("Nome e Preço são obrigatórios!");
-    db.ref('produtos').push({ nome, preco, categoria: cat, tag: tag, imagem: img }).then(() => { 
-        alert("Produto cadastrado!"); document.getElementById('p-nome').value = ""; document.getElementById('p-preco').value = ""; document.getElementById('p-img').value = "";
+    if(imagens.length === 0) return alert("Adicione pelo menos a Imagem 1!");
+
+    db.ref('produtos').push({ 
+        nome, 
+        preco, 
+        categoria: cat, 
+        tag: tag, 
+        imagem: imagens[0], // Compatibilidade com versões antigas
+        imagens: imagens    // Array com até 5 imagens
+    }).then(() => { 
+        alert("Produto cadastrado!"); 
+        document.getElementById('p-nome').value = ""; 
+        document.getElementById('p-preco').value = ""; 
+        for(let i=1; i<=5; i++) document.getElementById('p-img' + i).value = "";
     });
 }
-
 // --- FUNÇÃO DE BUSCA E FILTRAGEM DE PRODUTOS ---
 function filtrarProdutos() {
     const termo = document.getElementById('busca-produtos').value.toLowerCase();
@@ -934,10 +959,15 @@ db.ref('produtos').on('value', snap => {
     if(!snap.exists()) return;
     snap.forEach(c => {
         const prod = c.val(); const id = c.key; const tagAtual = prod.tag || 'nenhuma'; const catAtual = prod.categoria || 'tenis';
+        
+        // Garante que o array de imagens exista
+        const imgs = prod.imagens || (prod.imagem ? [prod.imagem] : []);
+        const imgPrincipal = imgs[0] || '';
+
         div.innerHTML += `
         <div class="item-list">
             <div style="display:flex; gap:12px; align-items:center;">
-                <img src="${prod.imagem || ''}" class="prod-img-preview" onerror="this.src='https://via.placeholder.com/50'">
+                <img src="${imgPrincipal}" class="prod-img-preview" onerror="this.src='https://via.placeholder.com/50'">
                 <div style="flex:1">
                     <b>${prod.nome || 'Sem Nome'}</b><br>
                     R$ ${prod.preco || '0,00'} <span style="font-size:0.65rem; color:#888888;">(${catAtual.toUpperCase()})</span><br>
@@ -970,12 +1000,19 @@ db.ref('produtos').on('value', snap => {
                     <option value="mais-pedido" ${tagAtual === 'mais-pedido' ? 'selected' : ''}>Mais Pedido</option>
                     <option value="esgotado" ${tagAtual === 'esgotado' ? 'selected' : ''}>Esgotado</option>
                 </select>
+
+                <label style="font-size:0.6rem; color:#888888;">IMAGENS (1 A 5):</label>
+                <input type="text" id="edit-img1-${id}" value="${imgs[0] || ''}" placeholder="Link Imagem 1">
+                <input type="text" id="edit-img2-${id}" value="${imgs[1] || ''}" placeholder="Link Imagem 2">
+                <input type="text" id="edit-img3-${id}" value="${imgs[2] || ''}" placeholder="Link Imagem 3">
+                <input type="text" id="edit-img4-${id}" value="${imgs[3] || ''}" placeholder="Link Imagem 4">
+                <input type="text" id="edit-img5-${id}" value="${imgs[4] || ''}" placeholder="Link Imagem 5">
+
                 <button class="btn-save" onclick="salvarEdicao('${id}')">SALVAR ALTERAÇÕES</button>
             </div>
         </div>`;
     });
     
-    // Reaplica o filtro caso haja pesquisa ativa enquanto o Firebase atualiza
     if(document.getElementById('busca-produtos').value !== '') {
         filtrarProdutos();
     }
@@ -986,8 +1023,25 @@ function salvarEdicao(id) {
     const preco = document.getElementById('edit-preco-' + id).value;
     const categoria = document.getElementById('edit-cat-' + id).value;
     const tag = document.getElementById('edit-tag-' + id).value;
-    db.ref('produtos/' + id).update({ nome, preco, categoria, tag }).then(() => {
-        alert("Atualizado!"); document.getElementById('edit-box-' + id).style.display='none';
+
+    const novasImagens = [
+        document.getElementById('edit-img1-' + id).value.trim(),
+        document.getElementById('edit-img2-' + id).value.trim(),
+        document.getElementById('edit-img3-' + id).value.trim(),
+        document.getElementById('edit-img4-' + id).value.trim(),
+        document.getElementById('edit-img5-' + id).value.trim()
+    ].filter(url => url !== "");
+
+    db.ref('produtos/' + id).update({ 
+        nome, 
+        preco, 
+        categoria, 
+        tag,
+        imagem: novasImagens[0] || '',
+        imagens: novasImagens
+    }).then(() => {
+        alert("Atualizado!"); 
+        document.getElementById('edit-box-' + id).style.display='none';
     });
 }
 </script>
