@@ -371,11 +371,12 @@
                     <option value="chinelos">Chinelos</option>
                     <option value="moletom">Moletom</option>
                     <option value="academia">Academia</option>
-                    <option value="raul">Raul</option>
+                    <option value="casablanca">Casablanca</option>
+                    <option value="corteiz">Corteiz</option>
                     <option value="camisas">Camisas</option>
                     <option value="conjuntos">Conjuntos</option>
                     <option value="shorts">Shorts</option>
-                    <option value="joias">Joias</option>
+                    <option value="hellstar">Hellstar</option>
                 </select>
                 <button onclick="addCupom()">CRIAR NOVO CUPOM</button>
             </div>
@@ -402,11 +403,12 @@
                     <option value="chinelos">Chinelos</option>
                     <option value="moletom">Moletom</option>
                     <option value="academia">Academia</option>
-                    <option value="raul">Raul</option>
+                    <option value="casablanca">Casablanca</option>
+                    <option value="corteiz">Corteiz</option>
                     <option value="camisas">Camisas</option>
                     <option value="conjuntos">Conjuntos</option>
                     <option value="shorts">Shorts</option>
-                    <option value="joias">Joias</option>
+                    <option value="hellstar">Hellstar</option>
                 </select>
 
                 <label style="font-size: 0.65rem; color: #888888; display: block; margin-bottom: 4px;">TAG DO PRODUTO:</label>
@@ -991,8 +993,9 @@ db.ref('produtos').on('value', snap => {
                     <option value="camisas" ${catAtual === 'camisas' ? 'selected' : ''}>Camisas</option>
                     <option value="conjuntos" ${catAtual === 'conjuntos' ? 'selected' : ''}>Conjuntos</option>
                     <option value="shorts" ${catAtual === 'shorts' ? 'selected' : ''}>Shorts</option>
-                    <option value="joias" ${catAtual === 'joias' ? 'selected' : ''}>Joias</option>
-                    <option value="raul" ${catAtual === 'raul' ? 'selected' : ''}>Raul</option>
+                    <option value="hellstar" ${catAtual === 'hellstar' ? 'selected' : ''}>Hellstar</option>
+                    <option value="casablanca" ${catAtual === 'casablanca' ? 'selected' : ''}>Casablanca</option>
+                    <option value="corteiz" ${catAtual === 'corteiz' ? 'selected' : ''}>Corteiz</option>
                 </select>
                 <label style="font-size:0.6rem; color:#888888;">TAG:</label>
                 <select id="edit-tag-${id}">
