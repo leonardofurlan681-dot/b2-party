@@ -377,6 +377,7 @@
                     <option value="conjuntos">Conjuntos</option>
                     <option value="shorts">Shorts</option>
                     <option value="hellstar">Hellstar</option>
+                    <option value="synaworld">Syna world</option>
                 </select>
                 <button onclick="addCupom()">CRIAR NOVO CUPOM</button>
             </div>
@@ -409,6 +410,7 @@
                     <option value="conjuntos">Conjuntos</option>
                     <option value="shorts">Shorts</option>
                     <option value="hellstar">Hellstar</option>
+                    <option value="synaworld">Syna world</option>
                 </select>
 
                 <label style="font-size: 0.65rem; color: #888888; display: block; margin-bottom: 4px;">TAG DO PRODUTO:</label>
@@ -996,6 +998,7 @@ db.ref('produtos').on('value', snap => {
                     <option value="hellstar" ${catAtual === 'hellstar' ? 'selected' : ''}>Hellstar</option>
                     <option value="casablanca" ${catAtual === 'casablanca' ? 'selected' : ''}>Casablanca</option>
                     <option value="corteiz" ${catAtual === 'corteiz' ? 'selected' : ''}>Corteiz</option>
+                    <option value="synaworld" ${catAtual === 'synaworld' ? 'selected' : ''}>Syna world</option>
                 </select>
                 <label style="font-size:0.6rem; color:#888888;">TAG:</label>
                 <select id="edit-tag-${id}">
