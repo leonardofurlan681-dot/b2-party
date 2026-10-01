@@ -378,6 +378,7 @@
                     <option value="shorts">Shorts</option>
                     <option value="hellstar">Hellstar</option>
                     <option value="synaworld">Syna world</option>
+                    <option value="basicas">Camisas basicas</option>
                 </select>
                 <button onclick="addCupom()">CRIAR NOVO CUPOM</button>
             </div>
@@ -406,6 +407,7 @@
                     <option value="academia">Academia</option>
                     <option value="casablanca">Casablanca</option>
                     <option value="corteiz">Corteiz</option>
+                    <option value="basicas">Camisas basicas</option>
                     <option value="camisas">Camisas</option>
                     <option value="conjuntos">Conjuntos</option>
                     <option value="shorts">Shorts</option>
@@ -998,6 +1000,7 @@ db.ref('produtos').on('value', snap => {
                     <option value="hellstar" ${catAtual === 'hellstar' ? 'selected' : ''}>Hellstar</option>
                     <option value="casablanca" ${catAtual === 'casablanca' ? 'selected' : ''}>Casablanca</option>
                     <option value="corteiz" ${catAtual === 'corteiz' ? 'selected' : ''}>Corteiz</option>
+                    <option value="basicas" ${catAtual === 'basicas' ? 'selected' : ''}>Camisas basicas</option>
                     <option value="synaworld" ${catAtual === 'synaworld' ? 'selected' : ''}>Syna world</option>
                 </select>
                 <label style="font-size:0.6rem; color:#888888;">TAG:</label>
