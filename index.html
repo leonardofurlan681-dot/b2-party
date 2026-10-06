@@ -322,10 +322,10 @@
                 <div style="display: flex; gap: 10px;">
                     <select id="temp-tipo" onchange="atualizarTamanhos()" style="flex:1">
                         <option value="tenis">Tênis</option>
-                        <option value="moletom">Moletom</option>
+                        <option value="nike">Nike</option>
                         <option value="academia">Academia</option>
                         <option value="camisas">Camisas</option>
-                        <option value="conjuntos">Conjuntos</option>
+                        <option value="nocta">Nocta</option>
                         <option value="shorts">Shorts</option>
                     </select>
                     <select id="temp-tam" style="flex:1"></select>
@@ -369,12 +369,13 @@
                     <option value="tenis">Tênis Masculino</option>
                     <option value="tenis-feminino">Tênis Feminino</option>
                     <option value="chinelos">Chinelos</option>
-                    <option value="moletom">Moletom</option>
+                    <option value="nike">Nike</option>
                     <option value="academia">Academia</option>
                     <option value="casablanca">Casablanca</option>
                     <option value="corteiz">Corteiz</option>
                     <option value="camisas">Camisas</option>
-                    <option value="conjuntos">Conjuntos</option>
+                    <option value="xtranho">XTRANHO</option>
+                    <option value="nocta">Nocta</option>
                     <option value="shorts">Shorts</option>
                     <option value="hellstar">Hellstar</option>
                     <option value="synaworld">Syna world</option>
@@ -403,13 +404,14 @@
                     <option value="tenis">Tênis Masculino</option>
                     <option value="tenis-feminino">Tênis Feminino</option>
                     <option value="chinelos">Chinelos</option>
-                    <option value="moletom">Moletom</option>
+                    <option value="nike">Nike</option>
                     <option value="academia">Academia</option>
                     <option value="casablanca">Casablanca</option>
+                    <option value="xtranho">XTRANHO</option>
                     <option value="corteiz">Corteiz</option>
                     <option value="basicas">Camisas basicas</option>
                     <option value="camisas">Camisas</option>
-                    <option value="conjuntos">Conjuntos</option>
+                    <option value="nocta">Nocta</option>
                     <option value="shorts">Shorts</option>
                     <option value="hellstar">Hellstar</option>
                     <option value="synaworld">Syna world</option>
@@ -992,10 +994,11 @@ db.ref('produtos').on('value', snap => {
                     <option value="tenis" ${catAtual === 'tenis' ? 'selected' : ''}>Tênis Masculino</option>
                     <option value="tenis-feminino" ${catAtual === 'tenis-feminino' ? 'selected' : ''}>Tênis Feminino</option>
                     <option value="chinelos" ${catAtual === 'chinelos' ? 'selected' : ''}>Chinelos</option>
-                    <option value="moletom" ${catAtual === 'moletom' ? 'selected' : ''}>Moletom</option>
+                    <option value="nike" ${catAtual === 'nike' ? 'selected' : ''}>Nike</option>
                     <option value="academia" ${catAtual === 'academia' ? 'selected' : ''}>Academia</option>
                     <option value="camisas" ${catAtual === 'camisas' ? 'selected' : ''}>Camisas</option>
-                    <option value="conjuntos" ${catAtual === 'conjuntos' ? 'selected' : ''}>Conjuntos</option>
+                    <option value="xtranho" ${catAtual === 'xtranho' ? 'selected' : ''}>XTRANHO</option>
+                    <option value=nocta" ${catAtual === 'nocta' ? 'selected' : ''}>Nocta</option>
                     <option value="shorts" ${catAtual === 'shorts' ? 'selected' : ''}>Shorts</option>
                     <option value="hellstar" ${catAtual === 'hellstar' ? 'selected' : ''}>Hellstar</option>
                     <option value="casablanca" ${catAtual === 'casablanca' ? 'selected' : ''}>Casablanca</option>
